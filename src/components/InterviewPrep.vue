@@ -20,10 +20,10 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 
-const questions: string[] = ["What is git? Why do we use it?",
-  "What is a variable? Can you give an example of an integer expression? A boolean expression?",
-  "What controls whether the “if” or the “else” portion of an if-else should execute?"
-]
+const { questions } = defineProps<{
+  questions: string[]
+}>()
+
 const currentIndex = ref(0)
 const question = computed(() => questions[currentIndex.value])
 
