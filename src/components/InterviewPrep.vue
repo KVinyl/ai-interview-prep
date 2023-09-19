@@ -4,6 +4,7 @@
     <textarea v-model="answer"></textarea>
     <button @click="getFeedback(answer)">Submit</button>
     <p>{{ feedback }}</p>
+    <button @click="nextQuestion">Next Question</button>
   </div>
 
   <div v-else>
@@ -25,6 +26,12 @@ const feedback = ref("")
 
 function getFeedback(prompt: string) {
     feedback.value = prompt ? `This is the feedback to the answer: ${prompt}`: "Please enter an answer to the question."
+}
+
+function nextQuestion() {
+  currentIndex.value++
+  answer.value = ""
+  feedback.value = ""
 }
 </script>
 
