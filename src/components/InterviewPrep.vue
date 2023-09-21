@@ -1,17 +1,16 @@
 <template>
   <div v-if="currentQuestion">
     <p>{{ currentQuestion }}</p>
-    <textarea v-model="answer" :disabled="status !== QuestionStatus.Unanswered"></textarea>
-    <button v-show="status === QuestionStatus.Unanswered" @click="getFeedback(currentQuestion, answer)"
-      :disabled="!answer.trim()">Submit</button>
+    <textarea v-model="answer" :disabled="!isUnanswered"></textarea>
+    <button v-show="isUnanswered" @click="submitAnswer(currentQuestion, answer)" :disabled="isAnswerEmpty">Submit</button>
     <p>{{ feedback }}</p>
-    <button v-show="status === QuestionStatus.Graded" @click="reset">Try Again</button>
-    <button v-show="status !== QuestionStatus.Grading" @click="questionsIndex++">Next Question</button>
+    <button v-show="isGraded" @click="resetQuestion">Try Again</button>
+    <button v-show="!isGrading" @click="nextQuestion">Next Question</button>
   </div>
 
-  <div v-else-if="questions.length">
+  <div v-else-if="hasQuestions">
     <h2>End of study session</h2>
-    <button @click="questionsIndex = 0">Start Over</button>
+    <button @click="restartSession">Restart Session</button>
   </div>
 
   <div v-else>
@@ -20,7 +19,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { ref, computed } from 'vue'
 
 import type OpenAIApiResponse from '../interfaces/OpenAIApiResponse'
 import type OpenAIApiError from '../interfaces/OpenAIApiError'
@@ -32,8 +31,11 @@ const { questions } = defineProps<{
 
 const questionsIndex = ref(0)
 const currentQuestion = computed(() => questions[questionsIndex.value])
+const hasQuestions = computed(() => questions.length > 0)
 
 const answer = ref("")
+const isAnswerEmpty = computed(() => !answer.value.trim())
+
 const feedback = ref("")
 
 enum QuestionStatus {
@@ -43,32 +45,40 @@ enum QuestionStatus {
 }
 const status = ref(QuestionStatus.Unanswered)
 
-function getFeedback(question: string, answer: string) {
-  status.value = QuestionStatus.Grading
-  const prompt = `Suppose I'm seeking a role as a junior software developer. 
-  I'm being asked this question in an interview: ${question}
-  
-  This is my answer: ${answer}
-  
-  Give me feedback of my answer to that interview question.`
+const isUnanswered = computed(() => status.value === QuestionStatus.Unanswered)
+const isGrading = computed(() => status.value === QuestionStatus.Grading)
+const isGraded = computed(() => status.value === QuestionStatus.Graded)
 
-  feedback.value = "Generating OpenAI Feedback..."
-
-  openAIService.getFeedback(prompt)
-    .then((response: OpenAIApiResponse) => feedback.value = response.data.choices[0].message.content)
-    .catch((error: OpenAIApiError) => feedback.value = error.message)
-    .finally(() => status.value = QuestionStatus.Graded)
-}
-
-function reset() {
+function resetQuestion() {
   answer.value = ""
   feedback.value = ""
   status.value = QuestionStatus.Unanswered
 }
 
-watch(questionsIndex, () => {
-  reset()
-})
+function nextQuestion() {
+  questionsIndex.value++
+  resetQuestion()
+}
+
+function restartSession() {
+  questionsIndex.value = 0
+  resetQuestion()
+}
+
+function submitAnswer(question: string, answer: string) {
+  status.value = QuestionStatus.Grading
+  const prompt = `Suppose I'm seeking a role as a junior software developer. 
+  I'm being asked this question in an interview: ${question}
+  This is my answer: ${answer}
+  Give me feedback of my answer to that interview question.`
+
+  feedback.value = "Grading your answer. Please wait."
+
+  openAIService.gradeAnswer(prompt)
+    .then((response: OpenAIApiResponse) => feedback.value = response.data.choices[0].message.content)
+    .catch((error: OpenAIApiError) => feedback.value = error.message)
+    .finally(() => status.value = QuestionStatus.Graded)
+}
 </script>
 
-<style scoped></style>../types/OpenAIApiResponse../types/OpenAIApiResponseData../types/OpenAIApiResponse../interfaces/OpenAIApiResponse
+<style scoped></style>

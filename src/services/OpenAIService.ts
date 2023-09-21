@@ -1,7 +1,7 @@
 import axios from "axios"
 
 export default {
-  getFeedback(content: string) {
+  gradeAnswer(content: string) {
     const apiKey: string | undefined = import.meta.env.VITE_OPENAI_API_KEY
 
     return axios.post(
