@@ -19,6 +19,8 @@
 
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
+
+import type OpenAIApiResponse from '../interfaces/OpenAIApiResponse'
 import openAIService from '../services/OpenAIService'
 
 const { questions } = defineProps<{
@@ -35,12 +37,12 @@ const isFeedbackLoading = ref(false)
 function getFeedback(question: string, answer: string) {
   if (question.trim() && answer.trim()) {
     const prompt = `Suppose I'm seeking a role as a junior software developer. I'm being asked this question in an interview: ${question}\n\nThis is my answer: ${answer}\n\nGive me feedback of my answer to that interview question.`
-    
+
     isFeedbackLoading.value = true
     feedback.value = "Generating OpenAI Feedback..."
-    
+
     openAIService.getFeedback(prompt)
-      .then((response: any) => feedback.value = response.data.choices[0].message.content)
+      .then((response: OpenAIApiResponse) => feedback.value = response.data.choices[0].message.content)
       .catch((error: any) => feedback.value = error.message)
       .finally(() => isFeedbackLoading.value = false)
   }
@@ -52,4 +54,4 @@ watch(currentIndex, () => {
 })
 </script>
 
-<style scoped></style>
+<style scoped></style>../types/OpenAIApiResponse../types/OpenAIApiResponseData../types/OpenAIApiResponse../interfaces/OpenAIApiResponse
