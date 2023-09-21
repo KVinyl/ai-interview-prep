@@ -2,8 +2,9 @@
   <div v-if="question">
     <p>{{ question }}</p>
     <textarea v-model="answer" :disabled="isFeedbackLoading"></textarea>
-    <button @click="getFeedback(question, answer)" :disabled="disableSubmitButton">Submit</button>
+    <button v-show="!feedback" @click="getFeedback(question, answer)" :disabled="!answer.trim()">Submit</button>
     <p>{{ feedback }}</p>
+    <button v-show="feedback" @click="clearAnswerAndFeedback">Try Again</button>
     <button @click="currentIndex++" :disabled="isFeedbackLoading">Next Question</button>
   </div>
 
@@ -32,15 +33,11 @@ const currentIndex = ref(0)
 const question = computed(() => questions[currentIndex.value])
 
 const answer = ref("")
-const submittedAnswer = ref("")
-const disableSubmitButton = computed(() => isFeedbackLoading.value || !answer.value.trim() || answer.value === submittedAnswer.value)
 
 const feedback = ref("")
 const isFeedbackLoading = ref(false)
 
 function getFeedback(question: string, answer: string) {
-  submittedAnswer.value = answer
-
   if (question.trim() && answer.trim()) {
     const prompt = `Suppose I'm seeking a role as a junior software developer. I'm being asked this question in an interview: ${question}\n\nThis is my answer: ${answer}\n\nGive me feedback of my answer to that interview question.`
 
@@ -54,9 +51,13 @@ function getFeedback(question: string, answer: string) {
   }
 }
 
-watch(currentIndex, () => {
+function clearAnswerAndFeedback() {
   answer.value = ""
   feedback.value = ""
+}
+
+watch(currentIndex, () => {
+  clearAnswerAndFeedback()
 })
 </script>
 
