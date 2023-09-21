@@ -1,9 +1,9 @@
 <template>
-  <div v-if="question">
-    <p>{{ question }}</p>
+  <div v-if="currentQuestion">
+    <p>{{ currentQuestion }}</p>
     <textarea v-model="answer" :disabled="status !== QuestionStatus.Unanswered"></textarea>
-    <button v-show="!feedback" @click="getFeedback(question, answer)"
-      :disabled="!(status === QuestionStatus.Unanswered) || !answer.trim()">Submit</button>
+    <button v-show="status === QuestionStatus.Unanswered" @click="getFeedback(currentQuestion, answer)"
+      :disabled="!answer.trim()">Submit</button>
     <p>{{ feedback }}</p>
     <button v-show="status === QuestionStatus.Graded" @click="reset">Try Again</button>
     <button v-show="status !== QuestionStatus.Grading" @click="questionsIndex++">Next Question</button>
@@ -31,7 +31,7 @@ const { questions } = defineProps<{
 }>()
 
 const questionsIndex = ref(0)
-const question = computed(() => questions[questionsIndex.value])
+const currentQuestion = computed(() => questions[questionsIndex.value])
 
 const answer = ref("")
 const feedback = ref("")
