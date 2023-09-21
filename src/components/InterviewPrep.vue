@@ -21,6 +21,7 @@
 import { ref, computed, watch } from 'vue'
 
 import type OpenAIApiResponse from '../interfaces/OpenAIApiResponse'
+import type OpenAIApiError from '../interfaces/OpenAIApiError';
 import openAIService from '../services/OpenAIService'
 
 const { questions } = defineProps<{
@@ -43,7 +44,7 @@ function getFeedback(question: string, answer: string) {
 
     openAIService.getFeedback(prompt)
       .then((response: OpenAIApiResponse) => feedback.value = response.data.choices[0].message.content)
-      .catch((error: any) => feedback.value = error.message)
+      .catch((error: OpenAIApiError) => feedback.value = error.message)
       .finally(() => isFeedbackLoading.value = false)
   }
 }
