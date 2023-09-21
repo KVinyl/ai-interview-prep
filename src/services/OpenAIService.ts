@@ -1,8 +1,8 @@
-import axios from "axios";
+import axios from "axios"
 
 export default {
   getFeedback(content: string) {
-    const apiKey: string | undefined = import.meta.env.VITE_OPENAI_API_KEY;
+    const apiKey: string | undefined = import.meta.env.VITE_OPENAI_API_KEY
 
     return axios.post(
       "https://api.openai.com/v1/chat/completions",
