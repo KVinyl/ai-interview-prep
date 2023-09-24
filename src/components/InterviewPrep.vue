@@ -1,33 +1,35 @@
 <template>
-  <div v-if="currentQuestion" class="container">
-    <div class="border border-black m-16">
-      <div class="flex flex-col items-center space-y-4 px-12 py-4">
-        <p>{{ currentQuestion }}</p>
-        <textarea v-model="answer" class="w-full border border-black p-4" placeholder="Enter your answer"
-          :disabled="!isUnanswered"></textarea>
-        <button v-show="isUnanswered" class="bg-sky-500 px-4 py-2" @click="submitAnswer(currentQuestion, answer)"
-          :disabled="isAnswerEmpty">Submit</button>
+  <div class="container">
+    <div v-if="currentQuestion">
+      <div class="border border-black m-16">
+        <div class="flex flex-col items-center space-y-4 px-12 py-4">
+          <p>{{ currentQuestion }}</p>
+          <textarea v-model="answer" class="w-full border border-black p-4" placeholder="Enter your answer"
+            :disabled="!isUnanswered"></textarea>
+          <button v-show="isUnanswered" class="bg-sky-500 px-4 py-2" @click="submitAnswer(currentQuestion, answer)"
+            :disabled="isAnswerEmpty">Submit</button>
+        </div>
+      </div>
+      <div class="flex flex-row justify-center space-x-4 ">
+        <button v-show="isGraded" class="bg-sky-500 px-4 py-2" @click="resetQuestion">Try Again</button>
+        <button v-show="!isGrading" class="bg-sky-500 px-4 py-2" @click="nextQuestion">Next Question</button>
+      </div>
+      <div class="bg-gray-300 flex px-12 py-4 ">
+        <p>{{ feedback }}</p>
       </div>
     </div>
-    <div class="flex flex-row justify-center space-x-4 ">
-      <button v-show="isGraded" class="bg-sky-500 px-4 py-2" @click="resetQuestion">Try Again</button>
-      <button v-show="!isGrading" class="bg-sky-500 px-4 py-2" @click="nextQuestion">Next Question</button>
-    </div>
-    <div class="bg-gray-300 flex px-12 py-4 ">
-      <p>{{ feedback }}</p>
-    </div>
-  </div>
 
-  <div v-else-if="hasQuestions" class="container">
-    <div class="border border-black m-16 flex flex-col items-center space-y-4 px-12 py-4">
-      <h2>End of study session</h2>
-      <button class="bg-sky-500 px-4 py-2" @click="restartSession">Restart Session</button>
+    <div v-else-if="hasQuestions">
+      <div class="border border-black m-16 flex flex-col items-center space-y-4 px-12 py-4">
+        <h2>End of study session</h2>
+        <button class="bg-sky-500 px-4 py-2" @click="restartSession">Restart Session</button>
+      </div>
     </div>
-  </div>
 
-  <div v-else class="container">
-    <div class="border border-black m-16 flex flex-col items-center space-y-4 px-12 py-4">
-      <h2>No questions found</h2>
+    <div v-else>
+      <div class="border border-black m-16 flex flex-col items-center space-y-4 px-12 py-4">
+        <h2>No questions found</h2>
+      </div>
     </div>
   </div>
 </template>
