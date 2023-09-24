@@ -25,8 +25,10 @@
     </div>
   </div>
 
-  <div v-else>
-    <h2>No questions found</h2>
+  <div v-else class="container">
+    <div class="border border-black m-16 flex flex-col items-center space-y-4 px-12 py-4">
+      <h2>No questions found</h2>
+    </div>
   </div>
 </template>
 
