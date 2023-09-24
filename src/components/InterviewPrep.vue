@@ -1,11 +1,21 @@
 <template>
-  <div v-if="currentQuestion">
-    <p>{{ currentQuestion }}</p>
-    <textarea v-model="answer" :disabled="!isUnanswered"></textarea>
-    <button v-show="isUnanswered" @click="submitAnswer(currentQuestion, answer)" :disabled="isAnswerEmpty">Submit</button>
-    <p>{{ feedback }}</p>
-    <button v-show="isGraded" @click="resetQuestion">Try Again</button>
-    <button v-show="!isGrading" @click="nextQuestion">Next Question</button>
+  <div v-if="currentQuestion" class="container">
+    <div class="border border-black m-16">
+      <div class="flex flex-col items-center space-y-4 px-12 py-4">
+        <p>{{ currentQuestion }}</p>
+        <textarea v-model="answer" class="w-full border border-black p-4" placeholder="Enter your answer"
+          :disabled="!isUnanswered"></textarea>
+        <button v-show="isUnanswered" class="rounded-none bg-sky-500 px-4 py-2"
+          @click="submitAnswer(currentQuestion, answer)" :disabled="isAnswerEmpty">Submit</button>
+      </div>
+    </div>
+    <div class="flex flex-row justify-center space-x-4 ">
+      <button v-show="isGraded" class="rounded-none bg-sky-500 px-4 py-2" @click="resetQuestion">Try Again</button>
+      <button v-show="!isGrading" class="rounded-none bg-sky-500 px-4 py-2" @click="nextQuestion">Next Question</button>
+    </div>
+    <div class="bg-gray-300 flex px-12 py-4 ">
+      <p>{{ feedback }}</p>
+    </div>
   </div>
 
   <div v-else-if="hasQuestions">
