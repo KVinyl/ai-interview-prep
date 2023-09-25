@@ -13,7 +13,7 @@
       <div class="flex flex-row justify-center space-x-4 ">
         <button v-show="!isGrading" :class="{
           'bg-sky-500': !isPrevButtonDisabled,
-          'bg-gray-400 opacity-50 cursor-not-allowed': isPrevButtonDisabled,
+          'bg-gray-400 opacity-20 cursor-not-allowed': isPrevButtonDisabled,
           'px-4 py-2': true
         }" :disabled="isPrevButtonDisabled" @click="previousQuestion">Previous Question</button>
         <button v-show="isGraded" class="bg-sky-500 px-4 py-2" @click="resetQuestion">Try Again</button>
@@ -70,7 +70,7 @@ const isUnanswered = computed(() => status.value === QuestionStatus.Unanswered)
 const isGrading = computed(() => status.value === QuestionStatus.Grading)
 const isGraded = computed(() => status.value === QuestionStatus.Graded)
 
-const isPrevButtonDisabled = computed(() => questionsIndex.value === 0)
+const isPrevButtonDisabled = computed(() => questionsIndex.value === 0 || isGrading.value)
 
 function resetQuestion() {
   answer.value = ""
