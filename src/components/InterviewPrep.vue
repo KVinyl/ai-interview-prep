@@ -6,18 +6,14 @@
           <p>{{ currentQuestion }}</p>
           <textarea v-model="answer" class="w-full border border-black p-4" placeholder="Enter your answer"
             :disabled="!isUnanswered"></textarea>
-          <button v-show="isUnanswered" class="bg-sky-500 px-4 py-2" @click="submitAnswer(currentQuestion, answer)"
-            :disabled="isAnswerEmpty">Submit</button>
+          <RectangleButton v-show="isUnanswered" text="Submit" :disabled="isAnswerEmpty"
+            @click="submitAnswer(currentQuestion, answer)" />
         </div>
       </div>
       <div class="flex flex-row justify-center space-x-4 ">
-        <button v-show="!isGrading" :class="{
-          'bg-sky-500': !isPrevButtonDisabled,
-          'bg-gray-400 opacity-20 cursor-not-allowed': isPrevButtonDisabled,
-          'px-4 py-2': true
-        }" :disabled="isPrevButtonDisabled" @click="previousQuestion">Previous Question</button>
-        <button v-show="isGraded" class="bg-sky-500 px-4 py-2" @click="resetQuestion">Try Again</button>
-        <button v-show="!isGrading" class="bg-sky-500 px-4 py-2" @click="nextQuestion">Next Question</button>
+        <RectangleButton text="Previous Question" :disabled="isPrevButtonDisabled" @click="previousQuestion" />
+        <RectangleButton text="Try Again" :disabled="!isGraded" @click="resetQuestion" />
+        <RectangleButton text="Next Question" :disabled="isGrading" @click="nextQuestion" />
       </div>
       <div class="bg-gray-300 flex px-12 py-4 ">
         <p>{{ feedback }}</p>
@@ -27,7 +23,7 @@
     <div v-else-if="hasQuestions">
       <div class="border border-black m-16 flex flex-col items-center space-y-4 px-12 py-4">
         <h2>End of study session</h2>
-        <button class="bg-sky-500 px-4 py-2" @click="restartSession">Restart Session</button>
+        <RectangleButton text="Restart Session" @click="restartSession" />
       </div>
     </div>
 
@@ -41,6 +37,8 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
+
+import RectangleButton from './RectangleButton.vue'
 
 import type OpenAIApiResponse from '../interfaces/OpenAIApiResponse'
 import type OpenAIApiError from '../interfaces/OpenAIApiError'
@@ -108,5 +106,3 @@ function submitAnswer(question: string, answer: string) {
     .finally(() => status.value = QuestionStatus.Graded)
 }
 </script>
-
-<style scoped></style>
