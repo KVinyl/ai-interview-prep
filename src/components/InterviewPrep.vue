@@ -4,8 +4,8 @@
       <div class="border border-black m-16">
         <div class="flex flex-col items-center space-y-4 px-12 py-4">
           <p>{{ currentQuestion }}</p>
-          <textarea v-model="answer" class="w-3/4 h-32 border border-black p-4" placeholder="Enter your answer"
-            :disabled="!isUnanswered"></textarea>
+          <textarea ref="textarea" v-model="answer" class="w-3/4 h-32 border border-black p-4"
+            placeholder="Enter your answer" :disabled="!isUnanswered"></textarea>
           <RectangleButton v-show="isUnanswered" text="Submit" :disabled="isAnswerEmpty"
             @click="submitAnswer(currentQuestion, answer)" />
         </div>
@@ -36,7 +36,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 
 import RectangleButton from './RectangleButton.vue'
 
@@ -105,4 +105,7 @@ function submitAnswer(question: string, answer: string) {
     .catch((error: OpenAIApiError) => feedback.value = error.message)
     .finally(() => status.value = QuestionStatus.Graded)
 }
+
+const textarea = ref<HTMLInputElement | null>(null)
+onMounted(() => textarea.value?.focus())
 </script>
