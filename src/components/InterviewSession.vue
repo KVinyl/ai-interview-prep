@@ -6,15 +6,17 @@
           <QuestionSection :question="currentQuestion" />
           <textarea ref="textarea" v-model="typedAnswer" class="w-3/4 h-32 border border-black p-4"
             placeholder="Enter your answer" :disabled="!isUnanswered"></textarea>
-          <RectangleButton v-show="isUnanswered" :disabled="isTypedAnswerEmpty" @click="submitAnswer">
-            Submit</RectangleButton>
+          <RectangleButton v-show="isUnanswered" :disabled="isTypedAnswerEmpty" @click="submitAnswer">Submit
+          </RectangleButton>
+          <RectangleButton v-show="isGraded" @click="resetQuestion">Try Again</RectangleButton>
         </div>
       </div>
 
-      <div class="flex flex-row justify-center space-x-4 ">
-        <RectangleButton :disabled="isPrevButtonDisabled" @click="previousQuestion">Previous Question</RectangleButton>
-        <RectangleButton :disabled="!isGraded" @click="resetQuestion">Try Again</RectangleButton>
-        <RectangleButton :disabled="isGrading" @click="nextQuestion">Next Question</RectangleButton>
+      <div class="flex flex-row justify-center items-center space-x-4 m-4">
+        <RectangleButton :disabled="isPrevButtonDisabled" @click="previousQuestion">←</RectangleButton>
+
+        <p>{{ questionNumber }} / {{ questions.length }}</p>
+        <RectangleButton :disabled="isGrading" @click="nextQuestion">→</RectangleButton>
       </div>
       <AIFeedbackCard :feedback="currentFeedback" />
     </div>
@@ -41,6 +43,7 @@ const props = defineProps<{
 }>()
 
 const index = ref(0)
+const questionNumber = computed(() => index.value + 1)
 
 const currentQuestion = computed(() => props.questions[index.value])
 
