@@ -6,14 +6,14 @@
           <p>{{ currentQuestion }}</p>
           <textarea ref="textarea" v-model="answer" class="w-3/4 h-32 border border-black p-4"
             placeholder="Enter your answer" :disabled="!isUnanswered"></textarea>
-          <RectangleButton v-show="isUnanswered" text="Submit" :disabled="isAnswerEmpty"
-            @click="submitAnswer(currentQuestion, answer)" />
+          <RectangleButton v-show="isUnanswered" :disabled="isAnswerEmpty" @click="submitAnswer(currentQuestion, answer)">
+            Submit</RectangleButton>
         </div>
       </div>
       <div class="flex flex-row justify-center space-x-4 ">
-        <RectangleButton text="Previous Question" :disabled="isPrevButtonDisabled" @click="previousQuestion" />
-        <RectangleButton text="Try Again" :disabled="!isGraded" @click="resetQuestion" />
-        <RectangleButton text="Next Question" :disabled="isGrading" @click="nextQuestion" />
+        <RectangleButton :disabled="isPrevButtonDisabled" @click="previousQuestion">Previous Question</RectangleButton>
+        <RectangleButton :disabled="!isGraded" @click="resetQuestion">Try Again</RectangleButton>
+        <RectangleButton :disabled="isGrading" @click="nextQuestion">Next Question</RectangleButton>
       </div>
       <div class="bg-gray-300 flex px-12 py-4 ">
         <p>{{ feedback }}</p>
@@ -23,7 +23,7 @@
     <div v-else-if="hasQuestions">
       <div class="border border-black m-16 flex flex-col items-center space-y-4 px-12 py-4">
         <h2>End of study session</h2>
-        <RectangleButton text="Restart Session" @click="restartSession" />
+        <RectangleButton @click="restartSession">Restart Session</RectangleButton>
       </div>
     </div>
 

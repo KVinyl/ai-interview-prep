@@ -1,12 +1,14 @@
 <template>
-  <button :class="buttonClasses" :disabled="disabled" @click="emit('click')">{{ text }}</button>
+  <button :class="buttonClasses" :disabled="disabled" @click="emit('click')">
+    <slot></slot>
+  </button>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue'
 
-const props = withDefaults(defineProps<{ text?: string, color?: string, disabled?: boolean }>(), {
-  text: "", color: "bg-sky-500", disabled: false
+const props = withDefaults(defineProps<{ color?: string, disabled?: boolean }>(), {
+  color: "bg-sky-500", disabled: false
 })
 
 const emit = defineEmits(['click'])
