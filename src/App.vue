@@ -1,13 +1,13 @@
 <template>
   <div>
     <AppHeader />
-    <InterviewSession :questions="questions" />
+    <InterviewPreparation :questions="questions" />
   </div>
 </template>
 
 <script setup lang="ts">
 import AppHeader from './components/AppHeader.vue'
-import InterviewSession from './components/InterviewSession.vue'
+import InterviewPreparation from './components/InterviewPreparation.vue'
 
 const questions = ["What is git? Why do we use it?",
   "What is a variable? Can you give an example of an integer expression? A boolean expression?",

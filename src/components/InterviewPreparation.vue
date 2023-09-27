@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container mx-auto">
     <div v-if="currentQuestion">
       <div class="border border-black m-16">
         <div class="flex flex-col items-center space-y-4 px-12 py-4">
