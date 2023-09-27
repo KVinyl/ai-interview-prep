@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-gray-300 flex px-12 py-4 m-16 min-h-[200px] h-auto">
+  <div class="bg-gray-200 flex px-12 py-4 m-16 min-h-[200px] h-auto">
     <p>{{ feedback }}</p>
   </div>
 </template>
