@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="bg-sky-100">
     <AppHeader />
     <InterviewPreparation :questions="questions" />
   </div>

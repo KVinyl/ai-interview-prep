@@ -1,18 +1,15 @@
 <template>
-  <div class="container mx-auto bg-sky-100">
+  <div class="container mx-auto">
     <div v-if="currentQuestion">
-      <div class="border border-black m-16">
-
-        <div class="flex flex-col items-center space-y-4 px-12 py-4 bg-gray-200">
-          <QuestionSection :question="currentQuestion" />
-          <textarea ref="textarea" v-model="typedAnswer" class="w-3/4 h-32 border border-black p-4"
-            placeholder="Enter your answer" :disabled="!isUnanswered"></textarea>
-          <RectangleButton v-show="isUnanswered" :disabled="isTypedAnswerEmpty" @click="submitAnswer">Submit
-          </RectangleButton>
-          <RectangleButton v-show="isGrading" class="invisible" :disabled="true">Loading</RectangleButton>
-          <RectangleButton v-show="isGraded" @click="resetQuestion">Try Again
-          </RectangleButton>
-        </div>
+      <div class="flex flex-col items-center space-y-4 px-12 py-4 m-4 bg-gray-200 border border-gray-400 ">
+        <QuestionSection :question="currentQuestion" />
+        <textarea ref="textarea" v-model="typedAnswer" class="w-3/4 h-32 border border-gray-400 p-4"
+          placeholder="Enter your answer" :disabled="!isUnanswered"></textarea>
+        <RectangleButton v-show="isUnanswered" :disabled="isTypedAnswerEmpty" @click="submitAnswer">Submit
+        </RectangleButton>
+        <RectangleButton v-show="isGrading" class="invisible" :disabled="true">Loading</RectangleButton>
+        <RectangleButton v-show="isGraded" @click="resetQuestion">Try Again
+        </RectangleButton>
       </div>
 
       <div class="flex flex-row justify-center items-center space-x-4 m-4">
