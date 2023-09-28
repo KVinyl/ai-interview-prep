@@ -1,25 +1,5 @@
 <template>
-  <button :class="buttonClasses" :disabled="disabled" @click="emit('click')">
+  <button class="px-4 py-2 disabled:bg-gray-400 disabled:opacity-20 disabled:cursor-not-allowed">
     <slot></slot>
   </button>
 </template>
-
-<script setup lang="ts">
-import { computed } from 'vue'
-
-const props = withDefaults(defineProps<{ color?: string, hoverColor?: string, disabled?: boolean }>(), {
-  color: "bg-sky-500", hoverColor: "bg-sky-600", disabled: false
-})
-
-const emit = defineEmits(['click'])
-
-const buttonClasses = computed(() => {
-  const baseClasses = "px-4 py-2"
-  if (props.disabled) {
-    const disabledClasses = "bg-gray-400 opacity-20 cursor-not-allowed"
-    return `${baseClasses} ${disabledClasses}`
-  } else {
-    return `${baseClasses} ${props.color} hover:${props.hoverColor}`
-  }
-})
-</script>

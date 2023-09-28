@@ -6,17 +6,19 @@
         <textarea ref="textarea" v-model="typedAnswer" class="w-5/6 h-32 border border-gray-400 p-4"
           placeholder="Enter your answer" :disabled="!isUnanswered"></textarea>
         <RectangleButton v-show="isUnanswered" :disabled="isTypedAnswerEmpty" @click="submitAnswer"
-          hoverColor="bg-green-500">Submit
+          class="bg-green-500 hover:bg-green-600">Submit
         </RectangleButton>
         <RectangleButton v-show="isGrading" class="invisible" :disabled="true">Loading</RectangleButton>
-        <RectangleButton v-show="isGraded" @click="resetQuestion">Try Again
+        <RectangleButton v-show="isGraded" @click="resetQuestion" class="bg-sky-500 hover:bg-sky-600">Try Again
         </RectangleButton>
       </div>
 
       <div class="flex flex-row justify-center items-center space-x-4 m-4">
-        <RectangleButton :disabled="isPrevButtonDisabled" @click="previousQuestion">←</RectangleButton>
+        <RectangleButton :disabled="isPrevButtonDisabled" @click="previousQuestion" class="bg-sky-500 hover:bg-sky-600">←
+        </RectangleButton>
         <p>{{ questionNumber }} / {{ questions.length }}</p>
-        <RectangleButton :disabled="isGrading" @click="nextQuestion">→</RectangleButton>
+        <RectangleButton :disabled="isGrading" @click="nextQuestion" class="bg-sky-500 hover:bg-sky-600">→
+        </RectangleButton>
       </div>
 
       <AIFeedbackCard :feedback="currentFeedback" />
