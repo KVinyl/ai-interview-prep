@@ -14,11 +14,11 @@
       </div>
 
       <div class="flex flex-row justify-center items-center space-x-4 m-4">
-        <RectangleButton :disabled="isPrevButtonDisabled" @click="previousQuestion" class="bg-sky-500 hover:bg-sky-600">←
-        </RectangleButton>
+        <CircleButton :disabled="isPrevButtonDisabled" @click="previousQuestion" class="bg-sky-500 hover:bg-sky-600 text-2xl">🡨
+        </CircleButton>
         <p>{{ questionNumber }} / {{ questions.length }}</p>
-        <RectangleButton :disabled="isGrading" @click="nextQuestion" class="bg-sky-500 hover:bg-sky-600">→
-        </RectangleButton>
+        <CircleButton :disabled="isGrading" @click="nextQuestion" class="bg-sky-500 hover:bg-sky-600 text-2xl">🡪
+        </CircleButton>
       </div>
 
       <AIFeedbackCard :feedback="currentFeedback" />
@@ -35,6 +35,8 @@ import type { Ref } from 'vue'
 import AIFeedbackCard from './AIFeedbackCard.vue'
 import EndOfSessionCard from './EndOfSessionCard.vue'
 import QuestionSection from './QuestionSection.vue'
+
+import CircleButton from './CircleButton.vue'
 import RectangleButton from './RectangleButton.vue';
 
 import type OpenAIApiResponse from '../interfaces/OpenAIApiResponse'
