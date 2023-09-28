@@ -1,9 +1,9 @@
 <template>
-  <div class="container mx-auto">
+  <div class="container w-1/2 mx-auto">
     <div v-if="currentQuestion">
-      <div class="flex flex-col items-center space-y-4 px-12 py-4 m-4 bg-gray-200 border border-gray-400 ">
+      <div class="flex flex-col items-center space-y-4 px-4 py-4 mt-16 mb-4 bg-gray-200 border border-gray-400 ">
         <QuestionSection :question="currentQuestion" />
-        <textarea ref="textarea" v-model="typedAnswer" class="w-3/4 h-32 border border-gray-400 p-4"
+        <textarea ref="textarea" v-model="typedAnswer" class="w-5/6 h-32 border border-gray-400 p-4"
           placeholder="Enter your answer" :disabled="!isUnanswered"></textarea>
         <RectangleButton v-show="isUnanswered" :disabled="isTypedAnswerEmpty" @click="submitAnswer">Submit
         </RectangleButton>
@@ -17,6 +17,7 @@
         <p>{{ questionNumber }} / {{ questions.length }}</p>
         <RectangleButton :disabled="isGrading" @click="nextQuestion">→</RectangleButton>
       </div>
+
       <AIFeedbackCard :feedback="currentFeedback" />
     </div>
 
