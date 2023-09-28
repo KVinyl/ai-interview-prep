@@ -1,9 +1,9 @@
 <template>
   <div class="container w-1/2 mx-auto">
     <div v-if="currentQuestion">
-      <div class="flex flex-col items-center space-y-4 px-4 py-4 mt-16 mb-4 bg-gray-200 border border-gray-400 ">
+      <div class="flex flex-col items-center space-y-4 px-4 py-4 mt-16 mb-4 rounded-lg bg-gray-200 border border-gray-400 ">
         <QuestionSection :question="currentQuestion" />
-        <textarea ref="textarea" v-model="typedAnswer" class="w-5/6 h-32 border border-gray-400 p-4"
+        <textarea ref="textarea" v-model="typedAnswer" class="w-5/6 h-24 rounded-lg border border-gray-400 p-4"
           placeholder="Enter your answer" :disabled="!isUnanswered"></textarea>
         <RectangleButton v-show="isUnanswered" :disabled="isTypedAnswerEmpty" @click="submitAnswer"
           class="bg-green-500 hover:bg-green-600">Submit
