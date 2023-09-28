@@ -7,8 +7,8 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
-const props = withDefaults(defineProps<{ color?: string, disabled?: boolean }>(), {
-  color: "bg-sky-500", disabled: false
+const props = withDefaults(defineProps<{ color?: string, hoverColor?: string, disabled?: boolean }>(), {
+  color: "bg-sky-500", hoverColor: "bg-sky-600", disabled: false
 })
 
 const emit = defineEmits(['click'])
@@ -19,7 +19,7 @@ const buttonClasses = computed(() => {
     const disabledClasses = "bg-gray-400 opacity-20 cursor-not-allowed"
     return `${baseClasses} ${disabledClasses}`
   } else {
-    return `${baseClasses} ${props.color}`
+    return `${baseClasses} ${props.color} hover:${props.hoverColor}`
   }
 })
 </script>

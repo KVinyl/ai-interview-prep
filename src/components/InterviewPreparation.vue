@@ -5,7 +5,8 @@
         <QuestionSection :question="currentQuestion" />
         <textarea ref="textarea" v-model="typedAnswer" class="w-5/6 h-32 border border-gray-400 p-4"
           placeholder="Enter your answer" :disabled="!isUnanswered"></textarea>
-        <RectangleButton v-show="isUnanswered" :disabled="isTypedAnswerEmpty" @click="submitAnswer">Submit
+        <RectangleButton v-show="isUnanswered" :disabled="isTypedAnswerEmpty" @click="submitAnswer"
+          hoverColor="bg-green-500">Submit
         </RectangleButton>
         <RectangleButton v-show="isGrading" class="invisible" :disabled="true">Loading</RectangleButton>
         <RectangleButton v-show="isGraded" @click="resetQuestion">Try Again
