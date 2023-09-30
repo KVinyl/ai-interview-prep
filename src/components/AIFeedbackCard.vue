@@ -1,5 +1,5 @@
 <template>
-  <div
+  <div :class="{ 'invisible': !feedback && !isGrading }"
     class="flex justify-center px-12 py-4 mt-4 mb-16 min-h-[200px] h-auto border rounded-lg border-gray-400 bg-gray-200">
     <div v-show="isGrading" class="flex flex-col items-center">
       <div>{{ gradingMessage }}</div>
