@@ -1,6 +1,6 @@
 <template>
   <div :class="{ 'invisible': isUnanswered }"
-    class="flex justify-center px-12 py-4 mt-4 mb-16 min-h-[200px] h-auto border rounded-lg border-gray-400 bg-gray-200">
+    class="flex justify-center px-12 py-4 mt-4 mb-16 min-h-[200px] h-auto border rounded-lg border-gray-400 bg-gray-200 drop-shadow-md">
     <div v-show="isGrading" class="flex flex-col items-center">
       <div>{{ gradingMessage }}</div>
       <div class="w-1/2 p-4">

@@ -2,7 +2,7 @@
   <div class="container w-1/2 mx-auto">
     <div v-if="currentQuestion">
       <div
-        class="flex flex-col items-center space-y-4 px-4 py-4 mt-16 mb-4 rounded-lg bg-gray-200 border border-gray-400">
+        class="flex flex-col items-center space-y-4 px-4 py-4 mt-16 mb-4 rounded-lg bg-gray-200 border border-gray-400 drop-shadow-lg">
         <QuestionSection :question="currentQuestion" />
         <textarea ref="textarea" v-model="typedAnswer" class="w-5/6 h-24 rounded-lg border border-gray-400 p-4"
           placeholder="Enter your answer" :disabled="!isUnanswered"></textarea>
@@ -21,7 +21,7 @@
         </CircleButton>
       </div>
 
-      <AIFeedbackCard :feedback="currentFeedback" :isGrading="isGrading"/>
+      <AIFeedbackCard :feedback="currentFeedback" :isGrading="isGrading" />
     </div>
 
     <EndOfSessionCard v-else @restartSession="restartSession" />
