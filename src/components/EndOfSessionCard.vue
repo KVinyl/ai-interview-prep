@@ -6,6 +6,6 @@
 </template>
 
 <script setup lang="ts">
-import RectangleButton from './RectangleButton.vue';
+import RectangleButton from './RectangleButton.vue'
 const emit = defineEmits(['restartSession'])
 </script>

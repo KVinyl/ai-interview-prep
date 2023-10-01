@@ -37,7 +37,7 @@ import EndOfSessionCard from './EndOfSessionCard.vue'
 import QuestionSection from './QuestionSection.vue'
 
 import CircleButton from './CircleButton.vue'
-import RectangleButton from './RectangleButton.vue';
+import RectangleButton from './RectangleButton.vue'
 
 import type OpenAIApiResponse from '../interfaces/OpenAIApiResponse'
 import type OpenAIApiError from '../interfaces/OpenAIApiError'
