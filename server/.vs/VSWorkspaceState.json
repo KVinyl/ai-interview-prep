@@ -2,8 +2,9 @@
   "ExpandedNodes": [
     "",
     "\\AIInterviewPrep",
-    "\\AIInterviewPrep\\Controllers"
+    "\\AIInterviewPrep\\Controllers",
+    "\\AIInterviewPrep\\Properties"
   ],
-  "SelectedNode": "\\AIInterviewPrep\\Controllers\\GradeController.cs",
+  "SelectedNode": "\\AIInterviewPrep.sln",
   "PreviewInSolutionExplorer": false
 }
