@@ -39,9 +39,8 @@ import QuestionSection from './QuestionSection.vue'
 import CircleButton from './CircleButton.vue'
 import RectangleButton from './RectangleButton.vue'
 
-import type OpenAIApiResponse from '../interfaces/OpenAIApiResponse'
 import type OpenAIApiError from '../interfaces/OpenAIApiError'
-import openAIService from '../services/OpenAIService'
+import gradeService from '../services/GradeService'
 
 const props = defineProps<{
   questions: string[]
@@ -110,8 +109,8 @@ function getFeedback() {
   This is my answer: ${currentAnswer.value}
   Give me feedback of my answer to that interview question.`
 
-  openAIService.gradeAnswer(prompt)
-    .then((response: OpenAIApiResponse) => feedbacks.value[index.value] = response.data.choices[0].message.content)
+  gradeService.grade()
+    .then((response) => feedbacks.value[index.value] = response.data)
     .catch((error: OpenAIApiError) => feedbacks.value[index.value] = error.message)
     .finally(() => statuses.value[index.value] = QuestionStatus.Graded)
 }

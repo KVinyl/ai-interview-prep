@@ -2,7 +2,20 @@ internal class Program
 {
     private static void Main(string[] args)
     {
+        var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
         var builder = WebApplication.CreateBuilder(args);
+
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy(MyAllowSpecificOrigins,
+                                  policy =>
+                                  {
+                                      policy.AllowAnyOrigin()
+                                            .AllowAnyHeader()
+                                            .AllowAnyMethod();
+                                  });
+        });
 
         // Add services to the container.
 
@@ -21,6 +34,8 @@ internal class Program
         }
 
         app.UseHttpsRedirection();
+
+        app.UseCors(MyAllowSpecificOrigins);
 
         app.UseAuthorization();
 
