@@ -1,3 +1,4 @@
+using AIInterviewPrep.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AIInterviewPrep.Controllers
@@ -6,10 +7,15 @@ namespace AIInterviewPrep.Controllers
     [Route("[controller]")]
     public class GradeController : ControllerBase
     {
-        [HttpGet()]
-        public ActionResult<string> Grade()
+        [HttpPost()]
+        public ActionResult<string> Grade(Prompt prompt)
         {
-            return Ok("test response");
+            if (prompt.Content.Length == 0)
+            {
+                return BadRequest("The prompt cannot be empty.");
+            }
+
+            return Ok($"test response to {prompt.Content}");
         }
     }
 }

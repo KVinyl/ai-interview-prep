@@ -109,7 +109,7 @@ function getFeedback() {
   This is my answer: ${currentAnswer.value}
   Give me feedback of my answer to that interview question.`
 
-  gradeService.grade()
+  gradeService.grade(prompt)
     .then((response) => feedbacks.value[index.value] = response.data)
     .catch((error: OpenAIApiError) => feedbacks.value[index.value] = error.message)
     .finally(() => statuses.value[index.value] = QuestionStatus.Graded)

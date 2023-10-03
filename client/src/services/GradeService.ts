@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 export default {
-  grade() {
-    return axios.get('/grade');
-  },
+  grade(content: string) {
+    return axios.post('/grade', { content })
+  }
 }
