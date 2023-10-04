@@ -138,7 +138,10 @@ function submitAnswer() {
 
   connection.invoke('SendPrompt', prompt)
     .then(() => console.log('Prompt sent'))
-    .catch(error => console.error(error))
+    .catch(error => {
+      console.error(error)
+      feedbacks.value[index.value] = error
+    })
     .finally(() => statuses.value[index.value] = QuestionStatus.Graded)
 }
 </script>
