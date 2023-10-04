@@ -86,15 +86,15 @@ onMounted(() => {
   textarea.value?.focus()
 })
 
-connection.on('ReceiveFeedback', (response) => {
-  if (response) {
-    feedbacks.value[index.value] += response
-  }
-})
-
 onBeforeUnmount(() => {
   if (connection) {
     connection.stop()
+  }
+})
+
+connection.on('ReceiveFeedback', (response) => {
+  if (response) {
+    feedbacks.value[index.value] += response
   }
 })
 
@@ -130,12 +130,13 @@ function submitAnswer() {
   answers.value[index.value] = typedAnswer.value
   statuses.value[index.value] = QuestionStatus.Grading
 
-  const prompt = `Suppose I'm seeking a role as a junior software developer. 
+  const prompt = `Suppose I'm seeking a junior software developer position. 
   I'm being asked this question in an interview: ${currentQuestion.value}
   This is my answer: ${currentAnswer.value}
   Give me feedback of my answer to that interview question.`
 
-  connection.invoke('SendPrompt', prompt).then(() => console.log('Prompt sent'))
+  connection.invoke('SendPrompt', prompt)
+    .then(() => console.log('Prompt sent'))
     .catch(error => console.error(error))
     .finally(() => statuses.value[index.value] = QuestionStatus.Graded)
 }

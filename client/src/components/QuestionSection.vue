@@ -9,5 +9,3 @@ defineProps<{
   question: string
 }>()
 </script>
-
-<style scoped></style>
