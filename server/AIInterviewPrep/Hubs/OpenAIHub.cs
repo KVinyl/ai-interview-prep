@@ -15,15 +15,12 @@ namespace AIInterviewPrep.Hubs
 
         public async Task SendPrompt(string prompt)
         {
-            string openAIApiKey = Configuration["OPENAI_API_KEY"];
+            string? openAIApiKey = Configuration["OPENAI_API_KEY"];
 
-            var client = new OpenAIClient(openAIApiKey, new OpenAIClientOptions());
-            var chatCompletionsOptions = new ChatCompletionsOptions()
+            OpenAIClient client = new(openAIApiKey, new OpenAIClientOptions());
+            ChatCompletionsOptions chatCompletionsOptions = new()
             {
-                Messages =
-                {
-                    new ChatMessage(ChatRole.User, prompt)
-                }
+                Messages = { new ChatMessage(ChatRole.User, prompt) }
             };
 
             Response<StreamingChatCompletions> response = await client.GetChatCompletionsStreamingAsync(
