@@ -21,7 +21,7 @@
         </CircleButton>
       </div>
 
-      <AIFeedbackCard :feedback="currentFeedback" :isGrading="isGrading" />
+      <AIFeedbackCard v-show="!isUnanswered" :feedback="currentFeedback" :isGrading="isGrading" />
     </div>
 
     <EndOfSessionCard v-else @restartSession="restartSession" />
