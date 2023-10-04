@@ -1,4 +1,7 @@
+using AIInterviewPrep.DAOs;
+using AIInterviewPrep.DAOs.Interfaces;
 using AIInterviewPrep.Hubs;
+using Microsoft.Extensions.Configuration;
 
 internal class Program
 {
@@ -20,12 +23,22 @@ internal class Program
                 });
         });
 
+        IConfiguration configuration = new ConfigurationBuilder()
+         .SetBasePath(Directory.GetCurrentDirectory()) // Set the base path where your appsettings.json is located
+         .AddJsonFile("appsettings.json") // Load the appsettings.json file
+         .Build();
+
+        string connectionString = configuration.GetConnectionString("Project");
+
+
         // Add services to the container.
         builder.Services.AddControllers();
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
         builder.Services.AddSignalR();
+
+        builder.Services.AddTransient<IDeckDao>(m => new DeckSqlDao(connectionString));
 
         WebApplication app = builder.Build();
 
