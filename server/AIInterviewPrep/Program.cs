@@ -1,3 +1,5 @@
+using AIInterviewPrep.Hubs;
+
 internal class Program
 {
     private static void Main(string[] args)
@@ -11,9 +13,10 @@ internal class Program
             options.AddPolicy(MyAllowSpecificOrigins,
                                   policy =>
                                   {
-                                      policy.AllowAnyOrigin()
-                                            .AllowAnyHeader()
-                                            .AllowAnyMethod();
+                                      policy.WithOrigins("http://localhost:5173")
+                                        .AllowAnyHeader()
+                                        .AllowAnyMethod()
+                                        .AllowCredentials();
                                   });
         });
 
@@ -23,6 +26,7 @@ internal class Program
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
+        builder.Services.AddSignalR();
 
         var app = builder.Build();
 
@@ -38,8 +42,8 @@ internal class Program
         app.UseCors(MyAllowSpecificOrigins);
 
         app.UseAuthorization();
-
         app.MapControllers();
+        app.MapHub<OpenAIHub>("/openAIHub");
 
         app.Run();
     }

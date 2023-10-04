@@ -29,8 +29,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount, watch } from 'vue'
 import type { Ref } from 'vue'
+import { HubConnectionBuilder } from '@microsoft/signalr'
 
 import AIFeedbackCard from './AIFeedbackCard.vue'
 import EndOfSessionCard from './EndOfSessionCard.vue'
@@ -38,9 +39,6 @@ import QuestionSection from './QuestionSection.vue'
 
 import CircleButton from './CircleButton.vue'
 import RectangleButton from './RectangleButton.vue'
-
-import type OpenAIApiError from '../interfaces/OpenAIApiError'
-import gradeService from '../services/GradeService'
 
 const props = defineProps<{
   questions: string[]
@@ -65,6 +63,7 @@ enum QuestionStatus {
   Grading,
   Graded
 }
+
 const statuses: Ref<QuestionStatus[]> = ref(Array(props.questions.length).fill(QuestionStatus.Unanswered))
 const status = computed(() => statuses.value[index.value])
 
@@ -73,6 +72,36 @@ const isGrading = computed(() => status.value === QuestionStatus.Grading)
 const isGraded = computed(() => status.value === QuestionStatus.Graded)
 
 const isPrevButtonDisabled = computed(() => index.value === 0 || isGrading.value)
+
+const hubUrl = `${import.meta.env.VITE_REMOTE_API}/openAIHub`
+const connection = new HubConnectionBuilder().withUrl(hubUrl).build()
+
+const textarea = ref<HTMLInputElement | null>(null)
+
+onMounted(() => {
+  connection.start()
+    .then(() => console.log('SignalR connected'))
+    .catch(error => console.error('Error connecting to SignalR:', error))
+
+  textarea.value?.focus()
+})
+
+connection.on('ReceiveFeedback', (response) => {
+  if (response) {
+    feedbacks.value[index.value] += response
+  }
+})
+
+onBeforeUnmount(() => {
+  if (connection) {
+    connection.stop()
+  }
+})
+
+watch(index, () => {
+  resetTypedAnswer()
+  textarea.value?.focus()
+})
 
 function resetTypedAnswer() {
   typedAnswer.value = currentAnswer.value
@@ -99,27 +128,15 @@ function restartSession() {
 
 function submitAnswer() {
   answers.value[index.value] = typedAnswer.value
-  getFeedback()
-}
-
-function getFeedback() {
   statuses.value[index.value] = QuestionStatus.Grading
+
   const prompt = `Suppose I'm seeking a role as a junior software developer. 
   I'm being asked this question in an interview: ${currentQuestion.value}
   This is my answer: ${currentAnswer.value}
   Give me feedback of my answer to that interview question.`
 
-  gradeService.grade(prompt)
-    .then((response) => feedbacks.value[index.value] = response.data)
-    .catch((error: OpenAIApiError) => feedbacks.value[index.value] = error.message)
+  connection.invoke('SendPrompt', prompt).then(() => console.log('Prompt sent'))
+    .catch(error => console.error(error))
     .finally(() => statuses.value[index.value] = QuestionStatus.Graded)
 }
-
-const textarea = ref<HTMLInputElement | null>(null)
-onMounted(() => textarea.value?.focus())
-
-watch(index, () => {
-  resetTypedAnswer()
-  textarea.value?.focus()
-})
 </script>
