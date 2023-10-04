@@ -31,7 +31,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onBeforeUnmount, watch } from 'vue'
 import type { Ref } from 'vue'
-import { HubConnectionBuilder } from '@microsoft/signalr'
 
 import AIFeedbackCard from './AIFeedbackCard.vue'
 import EndOfSessionCard from './EndOfSessionCard.vue'
@@ -39,6 +38,8 @@ import QuestionSection from './QuestionSection.vue'
 
 import CircleButton from './CircleButton.vue'
 import RectangleButton from './RectangleButton.vue'
+
+import { HubConnectionBuilder } from '@microsoft/signalr'
 
 const props = defineProps<{
   questions: string[]
@@ -81,7 +82,7 @@ const textarea = ref<HTMLInputElement | null>(null)
 onMounted(() => {
   connection.start()
     .then(() => console.log('SignalR connected'))
-    .catch(error => console.error('Error connecting to SignalR:', error))
+    .catch(error => console.error(`Error connecting to SignalR: ${error}`))
 
   textarea.value?.focus()
 })
@@ -92,7 +93,7 @@ onBeforeUnmount(() => {
   }
 })
 
-connection.on('ReceiveFeedback', (response) => {
+connection.on('ReceiveFeedback', (response: string) => {
   if (response) {
     feedbacks.value[index.value] += response
   }
