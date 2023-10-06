@@ -4,9 +4,9 @@
       <div
         class="flex flex-col items-center space-y-4 px-4 py-4 mt-16 mb-4 rounded-lg bg-gray-200 border border-gray-400 drop-shadow-lg">
         <QuestionSection :question="currentQuestion" />
-        <textarea ref="textarea" v-model="typedAnswer" class="w-5/6 h-24 rounded-lg border border-gray-400 p-4"
+        <textarea ref="textarea" v-model="answers[index]" class="w-5/6 h-24 rounded-lg border border-gray-400 p-4"
           placeholder="Enter your answer" :disabled="!isUnanswered"></textarea>
-        <RectangleButton v-show="isUnanswered" :disabled="isTypedAnswerEmpty" @click="submitAnswer"
+        <RectangleButton v-show="isUnanswered" :disabled="isAnswerEmpty" @click="submitAnswer"
           class="bg-green-500 hover:bg-green-600">Submit</RectangleButton>
         <RectangleButton v-show="isGrading" class="invisible" :disabled="true">Loading</RectangleButton>
         <RectangleButton v-show="isGraded" @click="resetQuestion" class="bg-sky-500 hover:bg-sky-600">Try Again
@@ -54,9 +54,7 @@ const currentQuestion = computed(() => props.questions[index.value])
 
 const answers: Ref<string[]> = ref(Array(props.questions.length).fill(""))
 const currentAnswer = computed(() => answers.value[index.value])
-
-const typedAnswer = ref(answers.value[index.value])
-const isTypedAnswerEmpty = computed(() => !typedAnswer.value.trim())
+const isAnswerEmpty = computed(() => !currentAnswer.value.trim())
 
 const feedbacks: Ref<string[]> = ref(Array(props.questions.length).fill(""))
 const currentFeedback = computed(() => feedbacks.value[index.value])
@@ -102,19 +100,13 @@ connection.on('ReceiveFeedback', (response: string) => {
 })
 
 watch(index, () => {
-  resetTypedAnswer()
   textarea.value?.focus()
 })
-
-function resetTypedAnswer() {
-  typedAnswer.value = currentAnswer.value
-}
 
 function resetQuestion() {
   answers.value[index.value] = ""
   feedbacks.value[index.value] = ""
   statuses.value[index.value] = QuestionStatus.Unanswered
-  resetTypedAnswer()
 }
 
 function previousQuestion() {
@@ -130,7 +122,6 @@ function restartSession() {
 }
 
 function submitAnswer() {
-  answers.value[index.value] = typedAnswer.value
   statuses.value[index.value] = QuestionStatus.Grading
 
   const prompt = `Suppose I'm seeking a junior software developer position. 
