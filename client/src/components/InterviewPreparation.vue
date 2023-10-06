@@ -6,7 +6,7 @@
         <QuestionSection :question="currentQuestion" />
         <textarea ref="textarea" v-model="answers[index]" class="w-5/6 h-24 rounded-lg border border-gray-400 p-4"
           placeholder="Enter your answer" :disabled="!isUnanswered"></textarea>
-        <RectangleButton v-show="isUnanswered" :disabled="isAnswerEmpty" @click="submitAnswer"
+        <RectangleButton v-show="isUnanswered" :disabled="isSubmitButtonDisabled" @click="submitAnswer"
           class="bg-green-500 hover:bg-green-600">Submit</RectangleButton>
         <RectangleButton v-show="isGrading" class="invisible" :disabled="true">Loading</RectangleButton>
         <RectangleButton v-show="isGraded" @click="resetQuestion" class="bg-sky-500 hover:bg-sky-600">Try Again
@@ -21,7 +21,7 @@
         </CircleButton>
       </div>
 
-      <AIFeedbackCard v-show="!isUnanswered" :feedback="currentFeedback" :isGrading="isGrading" />
+      <AIFeedbackCard v-show="currentFeedback || isGrading" :feedback="currentFeedback" :isGrading="isGrading" />
     </div>
 
     <EndOfSessionCard v-else-if="questions.length" @restartSession="restartSession" />
@@ -54,7 +54,9 @@ const currentQuestion = computed(() => props.questions[index.value])
 
 const answers: Ref<string[]> = ref(Array(props.questions.length).fill(""))
 const currentAnswer = computed(() => answers.value[index.value])
-const isAnswerEmpty = computed(() => !currentAnswer.value.trim())
+
+const submittedAnswers: Ref<string[]> = ref(Array(props.questions.length).fill(""))
+const currentSubmittedAnswer = computed(() => submittedAnswers.value[index.value])
 
 const feedbacks: Ref<string[]> = ref(Array(props.questions.length).fill(""))
 const currentFeedback = computed(() => feedbacks.value[index.value])
@@ -73,11 +75,16 @@ const isGrading = computed(() => status.value === QuestionStatus.Grading)
 const isGraded = computed(() => status.value === QuestionStatus.Graded)
 
 const isPrevButtonDisabled = computed(() => index.value === 0 || isGrading.value)
+const isSubmitButtonDisabled = computed(() => currentAnswer.value.trim() === currentSubmittedAnswer.value.trim() || !currentAnswer.value.trim())
 
 const hubUrl = `${import.meta.env.VITE_REMOTE_API}/openAIHub`
 const connection = new HubConnectionBuilder().withUrl(hubUrl).build()
 
 const textarea = ref<HTMLInputElement | null>(null)
+
+watch(index, () => {
+  textarea.value?.focus()
+})
 
 onMounted(() => {
   connection.start()
@@ -99,13 +106,7 @@ connection.on('ReceiveFeedback', (response: string) => {
   }
 })
 
-watch(index, () => {
-  textarea.value?.focus()
-})
-
 function resetQuestion() {
-  answers.value[index.value] = ""
-  feedbacks.value[index.value] = ""
   statuses.value[index.value] = QuestionStatus.Unanswered
 }
 
@@ -122,6 +123,8 @@ function restartSession() {
 }
 
 function submitAnswer() {
+  submittedAnswers.value[index.value] = currentAnswer.value
+  feedbacks.value[index.value] = ""
   statuses.value[index.value] = QuestionStatus.Grading
 
   const prompt = `Suppose I'm seeking a junior software developer position. 
