@@ -4,6 +4,6 @@ namespace AIInterviewPrep.DAOs.Interfaces
 {
     public interface IDeckDao
     {
-        public Deck GetDeck(int deckId);
+        public Deck? GetDeck(int deckId);
     }
 }

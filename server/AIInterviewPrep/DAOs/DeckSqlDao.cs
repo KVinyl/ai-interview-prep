@@ -44,7 +44,7 @@ namespace AIInterviewPrep.DAOs
             return deck;
         }
 
-        private List<string>? GetQuestionsByDeckId(int deckId)
+        private List<string> GetQuestionsByDeckId(int deckId)
         {
             string sqlGetQuestionsByDeckId = "SELECT question_text FROM question WHERE deck_id = @deck_id;";
             List<string> questions = new();
@@ -61,7 +61,7 @@ namespace AIInterviewPrep.DAOs
                         {
                             while (reader.Read())
                             {
-                                string questionText = Convert.ToString(reader["question_text"]);
+                                string questionText = Convert.ToString(reader["question_text"])!;
                                 questions.Add(questionText);
                             }
                         }
@@ -70,11 +70,10 @@ namespace AIInterviewPrep.DAOs
             }
             catch (Exception)
             {
-                return null;
+                return new();
             }
 
             return questions;
-
         }
 
         private Deck MapRowToDeck(SqlDataReader reader)
@@ -82,13 +81,11 @@ namespace AIInterviewPrep.DAOs
             Deck deck = new()
             {
                 Id = Convert.ToInt32(reader["deck_id"]),
-                Name = Convert.ToString(reader["deck_name"]),       
+                Name = Convert.ToString(reader["deck_name"])!,       
             };
             deck.Questions = GetQuestionsByDeckId(deck.Id);
 
             return deck;
         }
-
- 
     }
 }

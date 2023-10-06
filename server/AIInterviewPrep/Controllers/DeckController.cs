@@ -28,6 +28,5 @@ namespace AIInterviewPrep.Controllers
             }
             return Ok(deck);
         }
-
     }
 }

@@ -28,8 +28,7 @@ internal class Program
          .AddJsonFile("appsettings.json") // Load the appsettings.json file
          .Build();
 
-        string connectionString = configuration.GetConnectionString("Project");
-
+        string connectionString = configuration.GetConnectionString("Project") ?? string.Empty;
 
         // Add services to the container.
         builder.Services.AddControllers();
