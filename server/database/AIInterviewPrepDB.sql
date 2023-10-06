@@ -28,8 +28,8 @@ CREATE TABLE question (
 );
 
 
-INSERT INTO deck (deck_name)
-VALUES ('Interview Question of the Day');
+INSERT INTO deck (deck_name) VALUES ('Interview Question of the Day');
+INSERT INTO deck (deck_name) VALUES ('Top 25 Interview Questions');
 
 DECLARE @iqotd_id INT;
 SELECT @iqotd_id = deck_id FROM deck WHERE deck_name = 'Interview Question of the Day';

@@ -1,8 +1,8 @@
 <template>
   <div class="bg-sky-100 overflow-auto min-h-screen">
     <AppHeader />
-    <InterviewPreparation v-if="questions.length" :questions="questions" />
-    <div v-else class="text-center">No questions found in the deck</div>
+    <InterviewPreparation v-if="questions" :questions="questions" />
+    <div v-else class="text-center">Loading...</div>
   </div>
 </template>
 
@@ -15,7 +15,7 @@ import InterviewPreparation from './components/InterviewPreparation.vue'
 
 import deckService from './services/DeckService'
 
-const questions: Ref<string[]> = ref([])
+const questions: Ref<string[] | null> = ref(null)
 const deckId = 1
 
 onMounted(() => {

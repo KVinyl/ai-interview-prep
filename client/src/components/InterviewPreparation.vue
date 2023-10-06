@@ -24,7 +24,8 @@
       <AIFeedbackCard v-show="!isUnanswered" :feedback="currentFeedback" :isGrading="isGrading" />
     </div>
 
-    <EndOfSessionCard v-else @restartSession="restartSession" />
+    <EndOfSessionCard v-else-if="questions.length" @restartSession="restartSession" />
+    <EmptyDeckCard v-else />
   </div>
 </template>
 
@@ -33,6 +34,7 @@ import { ref, computed, onMounted, onBeforeUnmount, watch } from 'vue'
 import type { Ref } from 'vue'
 
 import AIFeedbackCard from './AIFeedbackCard.vue'
+import EmptyDeckCard from './EmptyDeckCard.vue'
 import EndOfSessionCard from './EndOfSessionCard.vue'
 import QuestionSection from './QuestionSection.vue'
 
