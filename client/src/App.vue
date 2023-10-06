@@ -1,8 +1,8 @@
 <template>
   <div class="bg-sky-100 overflow-auto min-h-screen">
     <AppHeader />
-    <InterviewPreparation v-if="questions" :questions="questions" />
-    <MessageCard v-else :message=message />
+    <InterviewPreparation v-if="questions" :name="deckName" :questions="questions" />
+    <MessageCard v-else :message=message class="w-1/2 mx-auto"/>
   </div>
 </template>
 
@@ -16,6 +16,7 @@ import MessageCard from './components/MessageCard.vue'
 
 import deckService from './services/DeckService'
 
+const deckName = ref("")
 const questions: Ref<string[] | null> = ref(null)
 const deckId = 1
 
@@ -23,8 +24,12 @@ const message = ref("Loading deck...")
 
 onMounted(() => {
   deckService.getDeck(deckId)
-    .then((response) => questions.value = response.data.questions)
-    .catch((error) => {
+    .then(response => {
+      const deck = response.data
+      deckName.value = deck.name
+      questions.value = deck.questions
+    })
+    .catch(error => {
       console.error(error)
       message.value = "Error loading the deck. Please try again."
     })

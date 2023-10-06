@@ -1,8 +1,10 @@
 <template>
   <div class="container w-1/2 mx-auto">
+    <h1 v-if="name" class="text-red-400 text-3xl font-medium m-2">{{ name }}</h1>
+
     <div v-if="currentQuestion">
       <div
-        class="flex flex-col items-center space-y-4 px-4 py-4 mt-16 mb-4 rounded-lg bg-gray-200 border border-gray-400 drop-shadow-lg">
+        class="flex flex-col items-center space-y-4 px-4 py-4 my-4 rounded-lg bg-gray-200 border border-gray-400 drop-shadow-lg">
         <QuestionSection :question="currentQuestion" />
         <textarea ref="textarea" v-model="answers[index]" class="w-5/6 h-24 rounded-lg border border-gray-400 p-4"
           placeholder="Enter your answer" :disabled="!isUnanswered"></textarea>
@@ -44,6 +46,7 @@ import RectangleButton from './RectangleButton.vue'
 import { HubConnectionBuilder } from '@microsoft/signalr'
 
 const props = defineProps<{
+  name?: string,
   questions: string[]
 }>()
 
