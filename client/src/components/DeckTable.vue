@@ -1,6 +1,6 @@
 <template>
-    <div>
-        <DeckTableRow v-for="(question, index) in questions" :number="index + 1" :question="question" @click="$emit('goToIndex', index)" />
+    <div class="my-4">
+        <DeckTableRow v-for="(question, index) in questions" :number="index + 1" :question="question" @clickText="$emit('goToIndex', index)" />
     </div>
 </template>
 
