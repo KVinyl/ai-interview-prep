@@ -1,5 +1,5 @@
 <template>
-  <div class="border border-gray-400 bg-gray-200 mx-16 mt-4 mb-16 flex flex-col items-center space-y-4 px-12 py-4 rounded-lg drop-shadow-lg">
+  <div class="border border-gray-400 bg-gray-200 mx-16 mt-8 mb-16 flex flex-col items-center space-y-4 px-12 py-4 rounded-lg drop-shadow-lg">
     <h2 class="text-lg font-medium">End of study session</h2>
     <div class="flex selection:flex-row space-x-4">
       <CircleButton @click="emit('goToLastQuestion')" class="bg-sky-500 hover:bg-sky-600">🡨</CircleButton>

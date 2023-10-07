@@ -1,10 +1,8 @@
 <template>
   <div class="container w-1/2 mx-auto">
-    <h1 v-if="name" class="text-red-400 text-3xl font-medium m-2">{{ name }}</h1>
-
     <div v-if="currentQuestion">
       <div
-        class="flex flex-col items-center space-y-4 px-4 py-4 my-4 rounded-lg bg-gray-200 border border-gray-400 drop-shadow-lg">
+        class="flex flex-col items-center space-y-4 px-4 py-4 mt-8 mb-4 rounded-lg bg-gray-200 border border-gray-400 drop-shadow-lg">
         <QuestionSection :question="currentQuestion" />
         <textarea ref="textarea" v-model="answers[index]" class="w-5/6 h-24 rounded-lg border border-gray-400 p-4"
           placeholder="Enter your answer" :disabled="!isUnanswered"></textarea>
@@ -15,10 +13,10 @@
         </RectangleButton>
       </div>
 
-      <div class="flex flex-row justify-center items-center space-x-4 m-4">
+      <div class="flex flex-row justify-center items-center space-x-6 m-4">
         <CircleButton :disabled="isPrevButtonDisabled" @click="previousQuestion"
           class="bg-sky-500 hover:bg-sky-600 text-2xl">🡨</CircleButton>
-        <div>{{ questionNumber }} / {{ questions.length }}</div>
+        <span class="text-xl">{{ questionNumber }} / {{ questions.length }}</span>
         <CircleButton :disabled="isGrading" @click="nextQuestion" class="bg-sky-500 hover:bg-sky-600 text-2xl">🡪
         </CircleButton>
       </div>
@@ -26,7 +24,8 @@
       <AIFeedbackCard v-show="currentFeedback || isGrading" :feedback="currentFeedback" :isGrading="isGrading" />
     </div>
 
-    <EndOfSessionCard v-else-if="questions.length" @goToLastQuestion="goToLastQuestion" @restartSession="restartSession" />
+    <EndOfSessionCard v-else-if="questions.length" @goToLastQuestion="goToLastQuestion"
+      @restartSession="restartSession" />
     <MessageCard v-else message="This deck currently has zero cards." />
 
     <DeckTable :questions="questions" :currentIndex="index" @goToIndex="goToIndex" />
