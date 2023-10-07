@@ -29,7 +29,7 @@
     <EndOfSessionCard v-else-if="questions.length" @restartSession="restartSession" />
     <MessageCard v-else message="This deck currently has zero cards." />
 
-    <DeckTable :questions="questions" @goToIndex="goToIndex"/>
+    <DeckTable :questions="questions" :currentIndex="index" @goToIndex="goToIndex"/>
   </div>
 </template>
 
