@@ -28,7 +28,7 @@
       @restartSession="restartSession" />
     <MessageCard v-else message="This deck currently has zero cards." />
 
-    <DeckTable :questions="questions" :currentIndex="index" @goToIndex="goToIndex" />
+    <DeckTable :questions="questions" :name="name" :currentIndex="index" @goToIndex="goToIndex" />
   </div>
 </template>
 
