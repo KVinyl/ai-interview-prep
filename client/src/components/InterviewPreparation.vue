@@ -29,7 +29,7 @@
     <EndOfSessionCard v-else-if="questions.length" @restartSession="restartSession" />
     <MessageCard v-else message="This deck currently has zero cards." />
 
-    <DeckTable :questions="questions" :currentIndex="index" @goToIndex="goToIndex"/>
+    <DeckTable :questions="questions" :currentIndex="index" @goToIndex="goToIndex" />
   </div>
 </template>
 
@@ -84,7 +84,10 @@ const isPrevButtonDisabled = computed(() => index.value === 0 || isGrading.value
 const isSubmitButtonDisabled = computed(() => currentAnswer.value.trim() === currentSubmittedAnswer.value.trim() || !currentAnswer.value.trim())
 
 const hubUrl = `${import.meta.env.VITE_REMOTE_API}/openAIHub`
-const connection = new HubConnectionBuilder().withUrl(hubUrl).build()
+const connection = new HubConnectionBuilder()
+  .withUrl(hubUrl)
+  .withAutomaticReconnect()
+  .build()
 
 const textarea = ref<HTMLInputElement | null>(null)
 
