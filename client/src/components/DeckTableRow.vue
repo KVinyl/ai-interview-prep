@@ -1,5 +1,5 @@
 <template>
-    <div class="border border-gray-400 bg-gray-200 p-2 space-x-1 ">
+    <div class="bg-gray-200 p-2 space-x-1 ">
         <span class="cursor-pointer" @click="$emit('clickText')">{{ text }}</span>
     </div>
 </template>
