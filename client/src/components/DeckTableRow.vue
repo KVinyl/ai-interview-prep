@@ -1,6 +1,6 @@
 <template>
     <div class="bg-gray-200 p-2 space-x-1 ">
-        <span class="cursor-pointer" @click="$emit('clickText')">{{ text }}</span>
+        <span class="cursor-pointer hover:text-green-900" @click="$emit('clickText')">{{ text }}</span>
     </div>
 </template>
 
