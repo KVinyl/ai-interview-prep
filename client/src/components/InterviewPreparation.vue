@@ -28,6 +28,8 @@
 
     <EndOfSessionCard v-else-if="questions.length" @restartSession="restartSession" />
     <MessageCard v-else message="This deck currently has zero cards." />
+
+    <DeckTable :questions="questions"/>
   </div>
 </template>
 
@@ -36,6 +38,7 @@ import { ref, computed, onMounted, onBeforeUnmount, watch } from 'vue'
 import type { Ref } from 'vue'
 
 import AIFeedbackCard from './AIFeedbackCard.vue'
+import DeckTable from './DeckTable.vue'
 import MessageCard from './MessageCard.vue'
 import EndOfSessionCard from './EndOfSessionCard.vue'
 import QuestionSection from './QuestionSection.vue'
