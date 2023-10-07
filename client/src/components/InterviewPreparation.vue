@@ -26,7 +26,7 @@
       <AIFeedbackCard v-show="currentFeedback || isGrading" :feedback="currentFeedback" :isGrading="isGrading" />
     </div>
 
-    <EndOfSessionCard v-else-if="questions.length" @restartSession="restartSession" />
+    <EndOfSessionCard v-else-if="questions.length" @goToLastQuestion="goToLastQuestion" @restartSession="restartSession" />
     <MessageCard v-else message="This deck currently has zero cards." />
 
     <DeckTable :questions="questions" :currentIndex="index" @goToIndex="goToIndex" />
@@ -127,12 +127,16 @@ function nextQuestion() {
   index.value++
 }
 
-function restartSession() {
-  index.value = 0
-}
-
 function goToIndex(nextIndex: number) {
   index.value = nextIndex
+}
+
+function restartSession() {
+  goToIndex(0)
+}
+
+function goToLastQuestion() {
+  goToIndex(props.questions.length - 1)
 }
 
 function submitAnswer() {
