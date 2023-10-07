@@ -1,8 +1,7 @@
 <template>
     <div class="border border-gray-400 divide-y divide-gray-400 my-4 drop-shadow-lg">
-        <DeckTableRow v-for="(question, index) in questions"
-            :class="{ 'bg-green-200 hover:bg-green-200': index === currentIndex }" :number="index + 1" :question="question"
-            @clickText="$emit('goToIndex', index)" />
+        <DeckTableRow v-for="(question, index) in questions" :number="index + 1" :question="question"
+            :isCurrent="index === currentIndex" @clickText="$emit('goToIndex', index)" />
     </div>
 </template>
 
