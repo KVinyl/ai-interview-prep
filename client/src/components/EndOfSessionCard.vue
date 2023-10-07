@@ -3,7 +3,7 @@
     <h2 class="text-lg font-medium">End of study session</h2>
     <div class="flex selection:flex-row space-x-4">
       <CircleButton @click="emit('goToLastQuestion')" class="bg-sky-500 hover:bg-sky-600">🡨</CircleButton>
-      <RectangleButton @click="emit('restartSession')" class="bg-green-500 hover:bg-green-600">Restart Session</RectangleButton>
+      <RectangleButton @click="emit('restartSession')" class="bg-sky-500 hover:bg-sky-600">Restart Session</RectangleButton>
     </div>
   </div>
 </template>
