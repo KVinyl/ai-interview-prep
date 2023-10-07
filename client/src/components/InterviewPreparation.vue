@@ -29,7 +29,7 @@
     <EndOfSessionCard v-else-if="questions.length" @restartSession="restartSession" />
     <MessageCard v-else message="This deck currently has zero cards." />
 
-    <DeckTable :questions="questions"/>
+    <DeckTable :questions="questions" @goToIndex="goToIndex"/>
   </div>
 </template>
 
@@ -126,6 +126,10 @@ function nextQuestion() {
 
 function restartSession() {
   index.value = 0
+}
+
+function goToIndex(nextIndex: number) {
+  index.value = nextIndex
 }
 
 function submitAnswer() {
