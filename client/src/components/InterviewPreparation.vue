@@ -109,7 +109,7 @@ onBeforeUnmount(() => {
 })
 
 connection.on('ReceiveFeedback', (response: string) => {
-  if (response) {
+  if (response !== null) {
     feedbacks.value[index.value] += response
   }
 })
