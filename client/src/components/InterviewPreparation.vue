@@ -94,11 +94,14 @@ watch(index, () => {
   textarea.value?.focus()
 })
 
-onMounted(() => {
+function startSignalRConnection() {
   connection.start()
     .then(() => console.log('SignalR connected'))
     .catch(error => console.error(`Error connecting to SignalR: ${error}`))
+}
 
+onMounted(() => {
+  startSignalRConnection()
   textarea.value?.focus()
 })
 
