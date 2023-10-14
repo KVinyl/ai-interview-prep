@@ -1,0 +1,1 @@
+export type QuestionStatus = "Unanswered" | "Grading" | "Graded"

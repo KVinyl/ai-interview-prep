@@ -4,8 +4,9 @@
       <div
         class="flex flex-col items-center space-y-4 px-4 py-4 mt-8 mb-4 rounded-lg bg-gray-200 border border-gray-400 drop-shadow-lg">
         <QuestionSection :question="currentQuestion" />
-        <textarea ref="textarea" v-model="answers[index]" class="w-5/6 h-24 rounded-lg border border-gray-400 p-4"
-          placeholder="Enter your answer" :disabled="!isUnanswered"></textarea>
+        <textarea ref="textarea" v-model="questionsData[index].answer"
+          class="w-5/6 h-24 rounded-lg border border-gray-400 p-4" placeholder="Enter your answer"
+          :disabled="!isUnanswered"></textarea>
         <RectangleButton v-show="isUnanswered" :disabled="isSubmitButtonDisabled" @click="submitAnswer"
           class="bg-green-500 hover:bg-green-600">Submit</RectangleButton>
         <RectangleButton v-show="isGrading" class="invisible" :disabled="true">Loading</RectangleButton>
@@ -16,7 +17,7 @@
       <div class="flex flex-row justify-center items-center space-x-6 m-4">
         <CircleButton :disabled="isPrevButtonDisabled" @click="previousQuestion"
           class="bg-sky-500 hover:bg-sky-600 text-2xl">🡨</CircleButton>
-        <span class="text-xl">{{ questionNumber }} / {{ questions.length }}</span>
+        <span class="text-xl">{{ currentQuestionNumber }} / {{ questions.length }}</span>
         <CircleButton :disabled="isGrading" @click="nextQuestion" class="bg-sky-500 hover:bg-sky-600 text-2xl">🡪
         </CircleButton>
       </div>
@@ -34,7 +35,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, onBeforeUnmount, watch } from 'vue'
-import type { Ref } from 'vue'
+import type { QuestionData } from '../types/QuestionData'
 
 import AIFeedbackCard from './AIFeedbackCard.vue'
 import DeckTable from './DeckTable.vue'
@@ -53,34 +54,26 @@ const props = defineProps<{
 }>()
 
 const index = ref(0)
-const questionNumber = computed(() => index.value + 1)
+const questionsData = ref(props.questions.map((question, index) => ({
+  number: index + 1,
+  question,
+  answer: "",
+  feedback: "",
+  status: "Unanswered"
+} as QuestionData)))
 
-const currentQuestion = computed(() => props.questions[index.value])
+const currentQuestionNumber = computed(() => questionsData.value[index.value]?.number)
+const currentQuestion = computed(() => questionsData.value[index.value]?.question)
+const currentAnswer = computed(() => questionsData.value[index.value]?.answer)
+const currentFeedback = computed(() => questionsData.value[index.value]?.feedback)
+const currentStatus = computed(() => questionsData.value[index.value]?.status)
 
-const answers: Ref<string[]> = ref(Array(props.questions.length).fill(""))
-const currentAnswer = computed(() => answers.value[index.value])
-
-const submittedAnswers: Ref<string[]> = ref(Array(props.questions.length).fill(""))
-const currentSubmittedAnswer = computed(() => submittedAnswers.value[index.value])
-
-const feedbacks: Ref<string[]> = ref(Array(props.questions.length).fill(""))
-const currentFeedback = computed(() => feedbacks.value[index.value])
-
-enum QuestionStatus {
-  Unanswered,
-  Grading,
-  Graded
-}
-
-const statuses: Ref<QuestionStatus[]> = ref(Array(props.questions.length).fill(QuestionStatus.Unanswered))
-const status = computed(() => statuses.value[index.value])
-
-const isUnanswered = computed(() => status.value === QuestionStatus.Unanswered)
-const isGrading = computed(() => status.value === QuestionStatus.Grading)
-const isGraded = computed(() => status.value === QuestionStatus.Graded)
+const isUnanswered = computed(() => currentStatus.value === "Unanswered")
+const isGrading = computed(() => currentStatus.value === "Grading")
+const isGraded = computed(() => currentStatus.value === "Graded")
 
 const isPrevButtonDisabled = computed(() => index.value === 0 || isGrading.value)
-const isSubmitButtonDisabled = computed(() => currentAnswer.value.trim() === currentSubmittedAnswer.value.trim() || !currentAnswer.value.trim())
+const isSubmitButtonDisabled = computed(() => !currentAnswer.value.trim())
 
 const hubUrl = `${import.meta.env.VITE_REMOTE_API}/openAIHub`
 const connection = new HubConnectionBuilder()
@@ -113,12 +106,12 @@ onBeforeUnmount(() => {
 
 connection.on('ReceiveFeedback', (response: string) => {
   if (response !== null) {
-    feedbacks.value[index.value] += response
+    questionsData.value[index.value].feedback += response
   }
 })
 
 function resetQuestion() {
-  statuses.value[index.value] = QuestionStatus.Unanswered
+  questionsData.value[index.value].status = "Unanswered"
 }
 
 function previousQuestion() {
@@ -142,9 +135,8 @@ function goToLastQuestion() {
 }
 
 function submitAnswer() {
-  submittedAnswers.value[index.value] = currentAnswer.value
-  feedbacks.value[index.value] = ""
-  statuses.value[index.value] = QuestionStatus.Grading
+  questionsData.value[index.value].feedback = ""
+  questionsData.value[index.value].status = "Grading"
 
   const prompt = `Suppose I'm seeking a junior software developer position. 
   I'm being asked this question in an interview: ${currentQuestion.value}
@@ -155,8 +147,8 @@ function submitAnswer() {
     .then(() => console.log('Prompt sent'))
     .catch(error => {
       console.error(error)
-      feedbacks.value[index.value] = error
+      questionsData.value[index.value].feedback = error
     })
-    .finally(() => statuses.value[index.value] = QuestionStatus.Graded)
+    .finally(() => questionsData.value[index.value].status = "Graded")
 }
 </script>
