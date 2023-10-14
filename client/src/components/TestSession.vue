@@ -1,6 +1,6 @@
 <template>
   <div class="container w-1/2 mx-auto">
-    <div v-if="currentQuestion">
+    <div v-if="isInSession">
       <div
         class="flex flex-col items-center space-y-4 px-4 py-4 mt-8 mb-4 rounded-lg bg-gray-200 border border-gray-400 drop-shadow-lg">
         <QuestionSection :question="currentQuestion" />
@@ -72,6 +72,7 @@ const isUnanswered = computed(() => currentStatus.value === "Unanswered")
 const isGrading = computed(() => currentStatus.value === "Grading")
 const isGraded = computed(() => currentStatus.value === "Graded")
 
+const isInSession = computed(() => 0 <= index.value && index.value < questionsData.value.length)
 const isPrevButtonDisabled = computed(() => index.value === 0 || isGrading.value)
 const isSubmitButtonDisabled = computed(() => !currentAnswer.value.trim())
 

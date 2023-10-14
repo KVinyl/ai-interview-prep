@@ -1,7 +1,7 @@
 <template>
   <div class="bg-sky-100 overflow-auto min-h-screen">
     <AppHeader />
-    <InterviewPreparation v-if="questions" :name="deckName" :questions="questions" />
+    <TestSession v-if="questions" :name="deckName" :questions="questions" />
     <MessageCard v-else :message=message class="w-1/2 mx-auto" />
   </div>
 </template>
@@ -13,7 +13,7 @@ import type { Ref } from 'vue'
 import type { AxiosError } from 'axios'
 
 import AppHeader from './components/AppHeader.vue'
-import InterviewPreparation from './components/InterviewPreparation.vue'
+import TestSession from './components/TestSession.vue'
 import MessageCard from './components/MessageCard.vue'
 
 import deckService from './services/DeckService'
