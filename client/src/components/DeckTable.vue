@@ -5,7 +5,7 @@
     <div class="border border-gray-400 divide-y divide-gray-400 overflow-y-auto h-96 rounded-b-lg"
       :class="{ 'rounded-t-lg': !name }">
       <DeckTableRow v-for="(questionData, index) in questionsData" :key=questionData.number :questionData="questionData"
-        :isCurrent="index === currentIndex" @clickText="emit('goToIndex', index)" />
+        :isCurrent="index === currentIndex" :isDisabled="isDisabled" @clickText="emit('goToIndex', index)" />
     </div>
   </div>
 </template>
@@ -17,7 +17,8 @@ import DeckTableRow from './DeckTableRow.vue'
 defineProps<{
   questionsData: QuestionData[],
   name?: string,
-  currentIndex?: number
+  currentIndex?: number,
+  isDisabled?: boolean
 }>()
 
 const emit = defineEmits<{

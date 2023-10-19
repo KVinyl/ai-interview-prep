@@ -29,7 +29,8 @@
       @restartSession="restartSession" />
     <MessageCard v-else message="This deck currently has zero cards." />
 
-    <DeckTable v-if="questionsData.length" :questionsData="questionsData" :name="name" :currentIndex="index" @goToIndex="goToIndex" />
+    <DeckTable v-if="questionsData.length" :questionsData="questionsData" :name="name" :currentIndex="index"
+      :isDisabled="isGrading" @goToIndex="goToIndex" />
   </div>
 </template>
 

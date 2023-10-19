@@ -1,7 +1,7 @@
 <template>
-  <div class="p-2" :class="bgColor, { 'hover:text-green-900': !isCurrent }">
-    <span :class="isCurrent ? 'font-semibold' : 'hover:underline cursor-pointer'" @click="handleClick">{{ questionText
-    }}</span>
+  <div class="p-2" :class="bgColor, { 'hover:text-green-900': !isCurrent && !isDisabled }">
+    <span :class="{ 'font-semibold': isCurrent, 'hover:underline cursor-pointer': !isCurrent && !isDisabled }"
+      @click="handleClick">{{ questionText }}</span>
   </div>
 </template>
 
