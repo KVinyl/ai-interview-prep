@@ -1,20 +1,37 @@
 <template>
-    <div v-if="isCurrent" class="bg-green-200 p-2">
-        <span class="font-semibold">{{ text }}</span>
-    </div>
-    <div v-else class="bg-gray-200 hover:text-green-900 p-2">
-        <span class=" hover:underline cursor-pointer" @click="emit('clickText')">{{ text }}</span>
-    </div>
+  <div class="p-2" :class="bgColor, { 'hover:text-green-900': !isCurrent }">
+    <span :class="isCurrent ? 'font-semibold' : 'hover:underline cursor-pointer'" @click="handleClick">{{ questionText
+    }}</span>
+  </div>
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue';
+import type { QuestionData } from '../types/QuestionData'
+
 const props = defineProps<{
-    number: number,
-    question: string,
-    isCurrent?: boolean
+  questionData: QuestionData,
+  isCurrent?: boolean,
+  isDisabled?: boolean
 }>()
 
 const emit = defineEmits(['clickText'])
 
-const text = `${props.number}. ${props.question}`
+const questionText = `${props.questionData.number}. ${props.questionData.question}`
+
+const bgColor = computed(() => {
+  if (props.isCurrent) {
+    return "bg-green-200"
+  } else if (props.questionData.status === "Graded") {
+    return "bg-gray-300"
+  } else {
+    return "bg-gray-200"
+  }
+})
+
+function handleClick() {
+  if (!props.isDisabled && !props.isCurrent) {
+    emit('clickText')
+  }
+}
 </script>
