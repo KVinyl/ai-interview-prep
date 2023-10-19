@@ -2,7 +2,7 @@
   <div class="container w-1/2 mx-auto">
     <div v-if="isInSession">
       <div
-        class="flex flex-col items-center space-y-4 px-4 py-4 mt-8 mb-4 rounded-lg bg-gray-200 border border-gray-400 drop-shadow-lg">
+        class="flex flex-col items-center space-y-4 px-4 py-4 mt-8 rounded-t-lg bg-gray-200 border border-gray-400 drop-shadow-lg">
         <QuestionSection :question="currentQuestion" />
         <textarea ref="textarea" v-model="questionsData[index].answer"
           class="w-5/6 h-24 rounded-lg border border-gray-400 p-4" placeholder="Enter your answer"
@@ -14,12 +14,17 @@
         </RectangleButton>
       </div>
 
-      <div class="flex flex-row justify-center items-center space-x-6 m-4">
+      <div class="flex flex-row justify-center items-center space-x-6 p-2  bg-slate-300 border border-gray-400  drop-shadow-lg">
+        <ShuffleButton :isShuffled="isShuffled" @click="toggleShuffle" />
+
         <CircleButton :disabled="isPrevButtonDisabled" @click="previousQuestion"
           class="bg-sky-500 hover:bg-sky-600 text-2xl">🡨</CircleButton>
         <span class="text-xl">{{ currentQuestionNumber }} / {{ questions.length }}</span>
         <CircleButton :disabled="isGrading" @click="nextQuestion" class="bg-sky-500 hover:bg-sky-600 text-2xl">🡪
         </CircleButton>
+
+        <RectangleButton class="invisible">.
+        </RectangleButton>
       </div>
 
       <AIFeedbackCard v-show="currentFeedback || isGrading" :feedback="currentFeedback" :isGrading="isGrading" />
@@ -46,6 +51,7 @@ import QuestionSection from './QuestionSection.vue'
 
 import CircleButton from './CircleButton.vue'
 import RectangleButton from './RectangleButton.vue'
+import ShuffleButton from './ShuffleButton.vue'
 
 import { HubConnectionBuilder } from '@microsoft/signalr'
 
@@ -111,6 +117,13 @@ connection.on('ReceiveFeedback', (response: string) => {
     questionsData.value[index.value].feedback += response
   }
 })
+
+const isShuffled = ref(false)
+const shuffledHistory = ref([])
+
+function toggleShuffle() {
+  isShuffled.value = !isShuffled.value
+}
 
 function resetQuestion() {
   questionsData.value[index.value].status = "Unanswered"
