@@ -14,18 +14,9 @@
         </RectangleButton>
       </div>
 
-      <div class="flex flex-row justify-center items-center space-x-6 p-2  bg-slate-300 border border-gray-400  drop-shadow-lg">
-        <ShuffleButton :isShuffled="isShuffled" @click="toggleShuffle" />
-
-        <CircleButton :disabled="isPrevButtonDisabled" @click="previousQuestion"
-          class="bg-sky-500 hover:bg-sky-600 text-2xl">🡨</CircleButton>
-        <span class="text-xl">{{ currentQuestionNumber }} / {{ questions.length }}</span>
-        <CircleButton :disabled="isGrading" @click="nextQuestion" class="bg-sky-500 hover:bg-sky-600 text-2xl">🡪
-        </CircleButton>
-
-        <RectangleButton class="invisible">.
-        </RectangleButton>
-      </div>
+      <NavigationBar :index="index" :status="currentStatus" :isShuffled="isShuffled" @toggleShuffle="toggleShuffle"
+        @previousQuestion="previousQuestion" @nextQuestion="nextQuestion">{{
+          currentQuestionNumber }} / {{ questions.length }}</NavigationBar>
 
       <AIFeedbackCard v-show="currentFeedback || isGrading" :feedback="currentFeedback" :isGrading="isGrading" />
     </div>
@@ -45,13 +36,11 @@ import type { QuestionData } from '../types/QuestionData'
 
 import AIFeedbackCard from './AIFeedbackCard.vue'
 import DeckTable from './DeckTable.vue'
-import MessageCard from './MessageCard.vue'
 import EndOfSessionCard from './EndOfSessionCard.vue'
+import MessageCard from './MessageCard.vue'
+import NavigationBar from './NavigationBar.vue'
 import QuestionSection from './QuestionSection.vue'
-
-import CircleButton from './CircleButton.vue'
 import RectangleButton from './RectangleButton.vue'
-import ShuffleButton from './ShuffleButton.vue'
 
 import { HubConnectionBuilder } from '@microsoft/signalr'
 
@@ -80,7 +69,6 @@ const isGrading = computed(() => currentStatus.value === "Grading")
 const isGraded = computed(() => currentStatus.value === "Graded")
 
 const isInSession = computed(() => 0 <= index.value && index.value < questionsData.value.length)
-const isPrevButtonDisabled = computed(() => index.value === 0 || isGrading.value)
 const isSubmitButtonDisabled = computed(() => !currentAnswer.value.trim())
 
 const hubUrl = `${import.meta.env.VITE_REMOTE_API}/openAIHub`
