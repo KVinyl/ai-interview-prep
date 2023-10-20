@@ -5,7 +5,7 @@
     <div class="border border-gray-400 divide-y divide-gray-400 overflow-y-auto h-96 rounded-b-lg"
       :class="{ 'rounded-t-lg': !name }">
       <DeckTableRow v-for="(questionData, index) in questionsData" :key=questionData.number :questionData="questionData"
-        :isCurrent="index === currentIndex" :isDisabled="isDisabled" @clickText="emit('goToIndex', index)" />
+        :isCurrent="index === currentIndex" :isDisabled="isDisabled" @clickRowText="emit('jumpToIndex', index)" />
     </div>
   </div>
 </template>
@@ -22,6 +22,6 @@ defineProps<{
 }>()
 
 const emit = defineEmits<{
-  goToIndex: [nextIndex: number]
+  jumpToIndex: [nextIndex: number]
 }>()
 </script>

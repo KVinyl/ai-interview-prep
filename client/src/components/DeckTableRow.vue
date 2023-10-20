@@ -1,7 +1,7 @@
 <template>
   <div class="p-2" :class="bgColor, { 'hover:text-green-900': !isCurrent && !isDisabled }">
     <span :class="{ 'font-semibold': isCurrent, 'hover:underline cursor-pointer': !isCurrent && !isDisabled }"
-      @click="rowClick">{{ questionText }}</span>
+      @click="clickRowText">{{ questionText }}</span>
   </div>
 </template>
 
@@ -15,7 +15,7 @@ const props = defineProps<{
   isDisabled?: boolean
 }>()
 
-const emit = defineEmits(['clickText'])
+const emit = defineEmits(['clickRowText'])
 
 const questionText = `${props.questionData.number}. ${props.questionData.question}`
 
@@ -29,9 +29,9 @@ const bgColor = computed(() => {
   }
 })
 
-function rowClick() {
+function clickRowText() {
   if (!props.isDisabled && !props.isCurrent) {
-    emit('clickText')
+    emit('clickRowText')
   }
 }
 </script>

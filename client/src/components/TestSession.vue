@@ -14,8 +14,9 @@
         </RectangleButton>
       </div>
 
-      <NavigationBar :index="currentIndex" :status="currentStatus!" :isShuffled="isShuffled" @toggleShuffle="toggleShuffle"
-        @previousQuestion="previousQuestion" @nextQuestion="nextQuestion">{{
+      <NavigationBar :index="currentIndex" :shuffleStartIndex="shuffleStartIndex" :status="currentStatus!"
+        :isShuffled="isShuffled" @toggleShuffle="toggleShuffle" @previousQuestion="previousQuestion"
+        @nextQuestion="nextQuestion">{{
           currentQuestionNumber }} / {{ questions.length }}</NavigationBar>
 
       <AIFeedbackCard v-show="currentFeedback || isGrading" :feedback="currentFeedback!" :isGrading="isGrading" />
@@ -26,12 +27,12 @@
     <MessageCard v-else message="This deck currently has zero cards." />
 
     <DeckTable v-if="questionsData.length" :questionsData="questionsData" :name="name" :currentIndex="currentIndex"
-      :isDisabled="isGrading" @goToIndex="goToIndex" />
+      :isDisabled="isGrading" @jumpToIndex="jumpToIndex" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onBeforeUnmount, watch } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount, watch, toValue } from 'vue'
 import type { QuestionData } from '../types/QuestionData'
 
 import AIFeedbackCard from './AIFeedbackCard.vue'
@@ -60,7 +61,7 @@ const questionsData = ref<QuestionData[]>(props.questions.map((question, index) 
 
 const currentQuestionData = computed<QuestionData | undefined>(() => questionsData.value[currentIndex.value])
 
-const currentQuestionNumber = computed(() => currentQuestionData.value?.number) 
+const currentQuestionNumber = computed(() => currentQuestionData.value?.number)
 const currentQuestion = computed(() => currentQuestionData.value?.question)
 const currentAnswer = computed(() => currentQuestionData.value?.answer)
 const currentFeedback = computed(() => currentQuestionData.value?.feedback)
@@ -117,7 +118,7 @@ const isShuffled = ref(false)
 const nextShuffledIndices = computed<number[]>(() =>
   questionsData.value
     .map((data, index) => (data.status !== "Graded" ? index : -1))
-    .filter(index => index !== -1 && index !== currentIndex.value)
+    .filter(index => ![-1, currentIndex.value, ...prevShuffleHistory.value].includes(index))
 )
 
 function getNextShuffledIndex() {
@@ -128,23 +129,31 @@ function getNextShuffledIndex() {
   return questionsData.value.length
 }
 
-const prevShuffleHistory: number[] = []
-const nextShuffleHistory: number[] = []
+const shuffleStartIndex = ref(-1)
+const prevShuffleHistory = ref<number[]>([])
+const nextShuffleHistory = ref<number[]>([])
 
 function resetShuffleHistory() {
-  prevShuffleHistory.length = 0
-  nextShuffleHistory.length = 0
+  shuffleStartIndex.value = isShuffled.value ? currentIndex.value : -1
+  prevShuffleHistory.value = []
+  nextShuffleHistory.value = []
+}
+
+function jumpToIndex(nextIndex: number) {
+  goToIndex(nextIndex)
+  resetShuffleHistory()
 }
 
 function toggleShuffle() {
   isShuffled.value = !isShuffled.value
+  resetShuffleHistory()
 }
 
 function previousQuestion() {
   if (isShuffled.value) {
-    if (prevShuffleHistory.length > 0) {
-      nextShuffleHistory.unshift(currentIndex.value)
-      const prevIndex = prevShuffleHistory.pop()!
+    if (prevShuffleHistory.value.length > 0) {
+      nextShuffleHistory.value.unshift(currentIndex.value)
+      const prevIndex = prevShuffleHistory.value.pop()!
       goToIndex(prevIndex)
     }
   } else {
@@ -154,8 +163,8 @@ function previousQuestion() {
 
 function nextQuestion() {
   if (isShuffled.value) {
-    prevShuffleHistory.push(currentIndex.value)
-    const nextIndex = nextShuffleHistory.length > 0 ? nextShuffleHistory.shift()! : getNextShuffledIndex()
+    prevShuffleHistory.value.push(currentIndex.value)
+    const nextIndex = nextShuffleHistory.value.length > 0 ? nextShuffleHistory.value.shift()! : getNextShuffledIndex()
     goToIndex(nextIndex)
   } else {
     goToIndex(currentIndex.value + 1)

@@ -1,7 +1,7 @@
 <template>
   <div
     class="flex flex-row justify-center items-center space-x-6 p-2 bg-slate-300 border border-gray-400  drop-shadow-lg">
-    <ShuffleButton :isShuffled="isShuffled" :isDisabled="isGrading" @click="shuffleClick" />
+    <ShuffleButton :isShuffled="isShuffled" :isDisabled="isGrading" @click="emit('toggleShuffle')" />
 
     <CircleButton :disabled="isPrevButtonDisabled" @click="emit('previousQuestion')"
       class="bg-sky-500 hover:bg-sky-600 text-2xl">
@@ -26,19 +26,13 @@ import ShuffleButton from './ShuffleButton.vue'
 
 const props = defineProps<{
   index: number,
+  shuffleStartIndex?: number,
   status: QuestionStatus,
-  isShuffled: boolean
+  isShuffled: boolean,
 }>()
 
 const emit = defineEmits(['toggleShuffle', 'previousQuestion', 'nextQuestion'])
 
-const shuffleStartIndex = ref(-1)
-
-function shuffleClick() {
-  shuffleStartIndex.value = !props.isShuffled ? props.index : -1
-  emit('toggleShuffle')
-}
-
 const isGrading = computed(() => props.status === "Grading")
-const isPrevButtonDisabled = computed(() => isGrading.value || props.index === 0 || props.index === shuffleStartIndex.value)
+const isPrevButtonDisabled = computed(() => isGrading.value || (!props.isShuffled && props.index === 0) || props.index === props.shuffleStartIndex)
 </script>
