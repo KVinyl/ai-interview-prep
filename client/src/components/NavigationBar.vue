@@ -1,6 +1,5 @@
 <template>
-  <div
-    class="flex flex-row justify-center items-center space-x-6 p-2 bg-slate-300 border border-gray-400  drop-shadow-lg">
+  <div class="flex flex-row justify-center items-center space-x-6 p-2 bg-slate-300 border border-gray-400 drop-shadow-lg">
     <ShuffleButton :isShuffled="isShuffled" :isDisabled="isGrading" @click="emit('toggleShuffle')" />
 
     <CircleButton :disabled="isPrevButtonDisabled" @click="emit('previousQuestion')"
@@ -18,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { computed } from 'vue'
 import type { QuestionStatus } from '../types/QuestionStatus'
 
 import CircleButton from './CircleButton.vue'

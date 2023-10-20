@@ -14,12 +14,12 @@
         </RectangleButton>
       </div>
 
-      <NavigationBar :index="currentIndex" :shuffleStartIndex="shuffleStartIndex" :status="currentStatus!"
-        :isShuffled="isShuffled" @toggleShuffle="toggleShuffle" @previousQuestion="previousQuestion"
-        @nextQuestion="nextQuestion">{{
+      <NavigationBar :class="{ 'rounded-b-lg': !showFeedbackCard }" :index="currentIndex"
+        :shuffleStartIndex="shuffleStartIndex" :status="currentStatus!" :isShuffled="isShuffled"
+        @toggleShuffle="toggleShuffle" @previousQuestion="previousQuestion" @nextQuestion="nextQuestion">{{
           currentQuestionNumber }} / {{ questions.length }}</NavigationBar>
 
-      <AIFeedbackCard v-show="currentFeedback || isGrading" :feedback="currentFeedback!" :isGrading="isGrading" />
+      <AIFeedbackCard v-show="showFeedbackCard" :feedback="currentFeedback!" :isGrading="isGrading" />
     </div>
 
     <EndOfSessionCard v-else-if="questions.length" @goToLastQuestion="goToLastQuestion"
@@ -193,6 +193,8 @@ function goToLastQuestion() {
     goToIndex(props.questions.length - 1)
   }
 }
+
+const showFeedbackCard = computed(() => currentFeedback.value || isGrading.value)
 
 function submitAnswer() {
   questionsData.value[currentIndex.value].feedback = ""
