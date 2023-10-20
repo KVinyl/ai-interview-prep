@@ -180,7 +180,13 @@ function restartSession() {
 }
 
 function goToLastQuestion() {
-  goToIndex(props.questions.length - 1)
+  if (isShuffled.value && prevShuffleHistory.value.length > 0) {
+    nextShuffleHistory.value.unshift(currentIndex.value)
+    const prevIndex = prevShuffleHistory.value.pop()!
+    goToIndex(prevIndex)
+  } else {
+    goToIndex(props.questions.length - 1)
+  }
 }
 
 function submitAnswer() {
