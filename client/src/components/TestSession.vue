@@ -3,7 +3,7 @@
     <div v-if="isInSession">
       <div
         class="flex flex-col items-center space-y-4 px-4 py-4 mt-8 rounded-t-lg bg-gray-200 border border-gray-400 drop-shadow-lg">
-        <QuestionSection :question="currentQuestion" />
+        <QuestionSection :question="currentQuestion!" />
         <textarea ref="textarea" v-model="questionsData[currentIndex].answer"
           class="w-5/6 h-24 rounded-lg border border-gray-400 p-4" placeholder="Enter your answer"
           :disabled="!isUnanswered"></textarea>
@@ -14,11 +14,11 @@
         </RectangleButton>
       </div>
 
-      <NavigationBar :index="currentIndex" :status="currentStatus" :isShuffled="isShuffled" @toggleShuffle="toggleShuffle"
+      <NavigationBar :index="currentIndex" :status="currentStatus!" :isShuffled="isShuffled" @toggleShuffle="toggleShuffle"
         @previousQuestion="previousQuestion" @nextQuestion="nextQuestion">{{
           currentQuestionNumber }} / {{ questions.length }}</NavigationBar>
 
-      <AIFeedbackCard v-show="currentFeedback || isGrading" :feedback="currentFeedback" :isGrading="isGrading" />
+      <AIFeedbackCard v-show="currentFeedback || isGrading" :feedback="currentFeedback!" :isGrading="isGrading" />
     </div>
 
     <EndOfSessionCard v-else-if="questions.length" @goToLastQuestion="goToLastQuestion"
@@ -58,20 +58,20 @@ const questionsData = ref<QuestionData[]>(props.questions.map((question, index) 
   status: "Unanswered"
 })))
 
-const currentQuestionData = computed(() => questionsData.value[currentIndex.value])
+const currentQuestionData = computed<QuestionData | undefined>(() => questionsData.value[currentIndex.value])
 
-const currentQuestionNumber = computed(() => currentQuestionData.value.number)
-const currentQuestion = computed(() => currentQuestionData.value.question)
-const currentAnswer = computed(() => currentQuestionData.value.answer)
-const currentFeedback = computed(() => currentQuestionData.value.feedback)
-const currentStatus = computed(() => currentQuestionData.value.status)
+const currentQuestionNumber = computed(() => currentQuestionData.value?.number) 
+const currentQuestion = computed(() => currentQuestionData.value?.question)
+const currentAnswer = computed(() => currentQuestionData.value?.answer)
+const currentFeedback = computed(() => currentQuestionData.value?.feedback)
+const currentStatus = computed(() => currentQuestionData.value?.status)
 
 const isUnanswered = computed(() => currentStatus.value === "Unanswered")
 const isGrading = computed(() => currentStatus.value === "Grading")
 const isGraded = computed(() => currentStatus.value === "Graded")
 
 const isInSession = computed(() => 0 <= currentIndex.value && currentIndex.value < questionsData.value.length)
-const isSubmitButtonDisabled = computed(() => !currentAnswer.value.trim())
+const isSubmitButtonDisabled = computed(() => !currentAnswer.value?.trim())
 
 const hubUrl = `${import.meta.env.VITE_REMOTE_API}/openAIHub`
 const connection = new HubConnectionBuilder()
