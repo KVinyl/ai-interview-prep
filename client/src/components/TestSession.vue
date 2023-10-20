@@ -176,7 +176,12 @@ function resetQuestion() {
 }
 
 function restartSession() {
-  goToIndex(0)
+  if (isShuffled.value) {
+    const randomIndex = Math.floor(Math.random() * questionsData.value.length)
+    jumpToIndex(randomIndex)
+  } else {
+    goToIndex(0)
+  }
 }
 
 function goToLastQuestion() {
