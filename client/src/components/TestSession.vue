@@ -72,28 +72,6 @@ const isGraded = computed(() => currentStatus.value === "Graded")
 const isInSession = computed(() => 0 <= currentIndex.value && currentIndex.value < questionsData.value.length)
 const isSubmitButtonDisabled = computed(() => !currentAnswer.value?.trim())
 
-const textarea = ref<HTMLInputElement | null>(null)
-
-watch(currentIndex, () => {
-  textarea.value?.focus()
-})
-
-
-onMounted(() => {
-  signalRService.startSignalRConnection()
-  textarea.value?.focus()
-})
-
-onBeforeUnmount(() => {
-  signalRService.stopSignalRConnection()
-})
-
-signalRService.on('ReceiveFeedback', response => {
-  if (response !== null) {
-    questionsData.value[currentIndex.value].feedback += response
-  }
-})
-
 function goToIndex(nextIndex: number) {
   currentIndex.value = nextIndex
 }
@@ -181,6 +159,37 @@ function goToLastQuestion() {
 
 const showFeedbackCard = computed(() => currentFeedback.value || isGrading.value)
 
+const textarea = ref<HTMLInputElement | null>(null)
+
+watch(currentIndex, () => {
+  textarea.value?.focus()
+})
+
+onMounted(() => {
+  signalRService.startSignalRConnection()
+  textarea.value?.focus()
+})
+
+onBeforeUnmount(() => {
+  signalRService.stopSignalRConnection()
+})
+
+signalRService.on('ReceiveFeedback', response => {
+  if (response !== null) {
+    questionsData.value[currentIndex.value].feedback += response
+  }
+})
+
+function sendPrompt(prompt: string) {
+  signalRService.invoke('SendPrompt', prompt)
+    .then(() => console.log('Prompt sent'))
+    .catch(error => {
+      console.error(error)
+      questionsData.value[currentIndex.value].feedback = error
+    })
+    .finally(() => questionsData.value[currentIndex.value].status = "Graded")
+}
+
 function submitAnswer() {
   questionsData.value[currentIndex.value].feedback = ""
   questionsData.value[currentIndex.value].status = "Grading"
@@ -190,13 +199,7 @@ function submitAnswer() {
   This is my answer: ${currentAnswer.value}
   Give me feedback of my answer to that interview question.`
 
-  signalRService.invoke('SendPrompt', prompt)
-    .then(() => console.log('Prompt sent'))
-    .catch(error => {
-      console.error(error)
-      questionsData.value[currentIndex.value].feedback = error
-    })
-    .finally(() => questionsData.value[currentIndex.value].status = "Graded")
+  sendPrompt(prompt)
 }
 
 function magicAdd() {
