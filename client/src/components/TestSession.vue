@@ -27,14 +27,14 @@
     <MessageCard v-else message="This deck currently has zero cards." />
 
     <DeckTable v-if="questionsData.length" :questionsData="questionsData" :name="name" :currentIndex="currentIndex"
-      :isDisabled="isGrading" @jumpToIndex="jumpToIndex" @clickMagicAdd="magicAdd"/>
+      :isDisabled="isGrading" @jumpToIndex="jumpToIndex" @clickMagicAdd="magicAdd" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onBeforeUnmount, watch, toValue } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount, watch } from 'vue'
 import type { QuestionData } from '../types/QuestionData'
-
+import signalRService from '../services/SignalRService'
 import AIFeedbackCard from './AIFeedbackCard.vue'
 import DeckTable from './DeckTable.vue'
 import EndOfSessionCard from './EndOfSessionCard.vue'
@@ -42,8 +42,6 @@ import MessageCard from './MessageCard.vue'
 import NavigationBar from './NavigationBar.vue'
 import QuestionSection from './QuestionSection.vue'
 import RectangleButton from './RectangleButton.vue'
-
-import { HubConnectionBuilder } from '@microsoft/signalr'
 
 const props = defineProps<{
   name?: string,
@@ -74,36 +72,23 @@ const isGraded = computed(() => currentStatus.value === "Graded")
 const isInSession = computed(() => 0 <= currentIndex.value && currentIndex.value < questionsData.value.length)
 const isSubmitButtonDisabled = computed(() => !currentAnswer.value?.trim())
 
-const hubUrl = `${import.meta.env.VITE_REMOTE_API}/openAIHub`
-const connection = new HubConnectionBuilder()
-  .withUrl(hubUrl)
-  .withAutomaticReconnect()
-  .build()
-
 const textarea = ref<HTMLInputElement | null>(null)
 
 watch(currentIndex, () => {
   textarea.value?.focus()
 })
 
-function startSignalRConnection() {
-  connection.start()
-    .then(() => console.log('SignalR connected'))
-    .catch(error => console.error(`Error connecting to SignalR: ${error}`))
-}
 
 onMounted(() => {
-  startSignalRConnection()
+  signalRService.startSignalRConnection()
   textarea.value?.focus()
 })
 
 onBeforeUnmount(() => {
-  if (connection) {
-    connection.stop()
-  }
+  signalRService.stopSignalRConnection()
 })
 
-connection.on('ReceiveFeedback', (response: string) => {
+signalRService.on('ReceiveFeedback', response => {
   if (response !== null) {
     questionsData.value[currentIndex.value].feedback += response
   }
@@ -205,7 +190,7 @@ function submitAnswer() {
   This is my answer: ${currentAnswer.value}
   Give me feedback of my answer to that interview question.`
 
-  connection.invoke('SendPrompt', prompt)
+  signalRService.invoke('SendPrompt', prompt)
     .then(() => console.log('Prompt sent'))
     .catch(error => {
       console.error(error)
