@@ -3,7 +3,7 @@
     <div v-if="isInSession">
       <div
         class="flex flex-col items-center space-y-4 px-4 py-4 mt-8 rounded-t-lg bg-gray-200 border border-gray-400 drop-shadow-lg">
-        <QuestionSection :question="currentQuestion!" />
+        <QuestionSection :question="currentQuestion!" :class="{ 'text-red-800': isError }" />
         <textarea ref="textarea" v-model="questionsData[currentIndex].answer"
           class="w-5/6 h-24 rounded-lg border border-gray-400 p-4" placeholder="Enter your answer"
           :disabled="!isUnanswered"></textarea>
@@ -68,6 +68,7 @@ const currentStatus = computed(() => currentQuestionData.value?.status)
 const isUnanswered = computed(() => currentStatus.value === "Unanswered")
 const isProcessing = computed(() => currentStatus.value === "Processing")
 const isGraded = computed(() => currentStatus.value === "Graded")
+const isError = computed(() => currentStatus.value === "Error")
 const isMagicAdding = ref(false)
 const isGrading = computed(() => isProcessing && !isMagicAdding)
 
@@ -224,16 +225,19 @@ function magicAddQuestion() {
   }
 
   questionsData.value.push(nextQuestionData)
-  jumpToIndex(questionsData.value.length - 1)
+
+  const lastIndex = questionsData.value.length - 1
+  jumpToIndex(lastIndex)
 
   signalRService.invoke('SendPrompt', prompt)
-    .then(() => console.log('Prompt sent for magicAddQuestion'))
+    .then(() => questionsData.value[lastIndex].status = "Unanswered")
     .catch(error => {
       console.error(error)
+      questionsData.value[lastIndex].question = "Error generating question. Please try again."
+      questionsData.value[lastIndex].status = "Error"
     })
     .finally(() => {
       isMagicAdding.value = false
-      questionsData.value[currentIndex.value].status = "Unanswered"
     })
 }
 </script>
