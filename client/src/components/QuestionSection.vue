@@ -1,6 +1,6 @@
 <template>
   <div class="px-4 py-2">
-    <p>{{ question }}</p>
+    {{ question }}
   </div>
 </template>
 

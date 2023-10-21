@@ -17,8 +17,7 @@ const props = defineProps<{
 
 const emit = defineEmits(['clickRowText'])
 
-const questionText = `${props.questionData.number}. ${props.questionData.question}`
-
+const questionText = computed(() => `${props.questionData.number}. ${props.questionData.question}`)
 const bgColor = computed(() => {
   if (props.isCurrent) {
     return "bg-green-200"

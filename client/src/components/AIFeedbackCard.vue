@@ -6,8 +6,8 @@
         <AnimatedSpinner />
       </div>
     </div>
-    <div v-show="!isLoading" class="justify-start">
-      <div class="whitespace-pre-wrap">{{ feedback }}</div>
+    <div v-show="!isLoading" class="justify-start whitespace-pre-wrap">
+      {{ feedback }}
     </div>
   </div>
 </template>
