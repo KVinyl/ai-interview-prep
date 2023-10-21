@@ -207,10 +207,13 @@ function submitAnswer() {
 function magicAddQuestion() {
   isMagicAdding.value = true
 
+  const questions = questionsData.value.map(data => data.question).reverse()
   const prompt = `Suppose I'm seeking a junior software developer position.
   Generate a potential question that could be asked in an interview.
-  Make sure the question isn't similiar as the following questions:
-  ${props.questions.join("\n")}`
+  Make sure that potential question is different from the following questions: 
+  """
+  ${questions.join("\n")}
+  """`
 
   const nextQuestionData: QuestionData = {
     number: questionsData.value.length + 1,
