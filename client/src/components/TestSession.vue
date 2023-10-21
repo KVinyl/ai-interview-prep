@@ -19,8 +19,7 @@
         @toggleShuffle="toggleShuffle" @previousQuestion="previousQuestion" @nextQuestion="nextQuestion">{{
           currentQuestionNumber }} / {{ questionsData.length }}</NavigationBar>
 
-      <AIFeedbackCard v-show="showFeedbackCard" :feedback="currentFeedback!"
-        :isGrading="isGrading" />
+      <AIFeedbackCard v-show="showFeedbackCard" :feedback="currentFeedback!" :isGrading="isGrading" />
     </div>
 
     <EndOfSessionCard v-else-if="questions.length" @goToLastQuestion="goToLastQuestion"
@@ -225,7 +224,7 @@ function magicAddQuestion() {
   jumpToIndex(questionsData.value.length - 1)
 
   signalRService.invoke('SendPrompt', prompt)
-    .then(() => console.log(prompt))
+    .then(() => console.log('Prompt sent for magicAddQuestion'))
     .catch(error => {
       console.error(error)
     })

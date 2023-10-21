@@ -1,5 +1,5 @@
 <template>
-  <button class="bg-sky-500 rounded p-1 hover:bg-yellow-600">
+  <button class="bg-slate-400 rounded p-1 hover:bg-yellow-600 disabled:invisible">
     <div class="flex text-white px-1 space-x-1">
       <MagicWand /><span>Add</span>
     </div>
