@@ -1,5 +1,5 @@
 <template>
-  <div class="p-2" :class="bgColor, { 'hover:text-green-900': !isCurrent && !isDisabled }">
+  <div class="px-4 py-2" :class="bgColor, { 'hover:text-green-900': !isCurrent && !isDisabled }">
     <span :class="{ 'font-semibold': isCurrent, 'hover:underline cursor-pointer': !isCurrent && !isDisabled }"
       @click="clickRowText">{{ questionText }}</span>
   </div>

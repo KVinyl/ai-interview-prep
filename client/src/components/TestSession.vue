@@ -27,7 +27,7 @@
     <MessageCard v-else message="This deck currently has zero cards." />
 
     <DeckTable v-if="questionsData.length" :questionsData="questionsData" :name="name" :currentIndex="currentIndex"
-      :isDisabled="isGrading" @jumpToIndex="jumpToIndex" />
+      :isDisabled="isGrading" @jumpToIndex="jumpToIndex" @clickMagicAdd="magicAdd"/>
   </div>
 </template>
 
@@ -212,5 +212,9 @@ function submitAnswer() {
       questionsData.value[currentIndex.value].feedback = error
     })
     .finally(() => questionsData.value[currentIndex.value].status = "Graded")
+}
+
+function magicAdd() {
+  console.log("In magicAdd function")
 }
 </script>

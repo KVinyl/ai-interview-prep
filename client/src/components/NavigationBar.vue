@@ -11,6 +11,7 @@
     <CircleButton :disabled="isGrading" @click="emit('nextQuestion')" class="bg-sky-500 hover:bg-sky-600 text-2xl">🡪
     </CircleButton>
 
+    <!-- Invisible button placeholder to maintain center alignment -->
     <CircleButton class="invisible">.
     </CircleButton>
   </div>
