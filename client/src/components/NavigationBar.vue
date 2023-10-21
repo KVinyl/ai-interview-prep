@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-row justify-center items-center space-x-6 p-2 bg-slate-300 border border-gray-400 drop-shadow-lg">
-    <ShuffleButton :isShuffled="isShuffled" :isDisabled="isGrading" @click="emit('toggleShuffle')" />
+    <ShuffleButton :isShuffled="isShuffled" :isDisabled="isProcessing" @click="emit('toggleShuffle')" />
 
     <CircleButton :disabled="isPrevButtonDisabled" @click="emit('previousQuestion')"
       class="bg-sky-500 hover:bg-sky-600 text-2xl">
@@ -8,7 +8,7 @@
     <span class="text-xl">
       <slot></slot>
     </span>
-    <CircleButton :disabled="isGrading" @click="emit('nextQuestion')" class="bg-sky-500 hover:bg-sky-600 text-2xl">🡪
+    <CircleButton :disabled="isProcessing" @click="emit('nextQuestion')" class="bg-sky-500 hover:bg-sky-600 text-2xl">🡪
     </CircleButton>
 
     <!-- Invisible button placeholder to maintain center alignment -->
@@ -33,6 +33,6 @@ const props = defineProps<{
 
 const emit = defineEmits(['toggleShuffle', 'previousQuestion', 'nextQuestion'])
 
-const isGrading = computed(() => props.status === "Grading")
-const isPrevButtonDisabled = computed(() => isGrading.value || (!props.isShuffled && props.index === 0) || props.index === props.shuffleStartIndex)
+const isProcessing = computed(() => props.status === "Processing")
+const isPrevButtonDisabled = computed(() => isProcessing.value || (!props.isShuffled && props.index === 0) || props.index === props.shuffleStartIndex)
 </script>

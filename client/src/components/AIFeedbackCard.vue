@@ -14,7 +14,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import AnimatedSpinner from './AnimatedSpinner.vue'
+import AnimatedSpinner from './icons/AnimatedSpinner.vue'
 
 const props = defineProps<{
   feedback: string,

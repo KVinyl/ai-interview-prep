@@ -9,7 +9,7 @@
           :disabled="!isUnanswered"></textarea>
         <RectangleButton v-show="isUnanswered" :disabled="isSubmitButtonDisabled" @click="submitAnswer"
           class="bg-green-500 hover:bg-green-600">Submit</RectangleButton>
-        <RectangleButton v-show="isGrading" class="invisible" :disabled="true">Loading</RectangleButton>
+        <RectangleButton v-show="isProcessing" class="invisible" :disabled="true">Loading</RectangleButton>
         <RectangleButton v-show="isGraded" @click="resetQuestion" class="bg-sky-500 hover:bg-sky-600">Try Again
         </RectangleButton>
       </div>
@@ -17,9 +17,10 @@
       <NavigationBar :class="{ 'rounded-b-lg': !showFeedbackCard }" :index="currentIndex"
         :shuffleStartIndex="shuffleStartIndex" :status="currentStatus!" :isShuffled="isShuffled"
         @toggleShuffle="toggleShuffle" @previousQuestion="previousQuestion" @nextQuestion="nextQuestion">{{
-          currentQuestionNumber }} / {{ questions.length }}</NavigationBar>
+          currentQuestionNumber }} / {{ questionsData.length }}</NavigationBar>
 
-      <AIFeedbackCard v-show="showFeedbackCard" :feedback="currentFeedback!" :isGrading="isGrading" />
+      <AIFeedbackCard v-show="showFeedbackCard" :feedback="currentFeedback!"
+        :isGrading="isGrading" />
     </div>
 
     <EndOfSessionCard v-else-if="questions.length" @goToLastQuestion="goToLastQuestion"
@@ -27,7 +28,7 @@
     <MessageCard v-else message="This deck currently has zero cards." />
 
     <DeckTable v-if="questionsData.length" :questionsData="questionsData" :name="name" :currentIndex="currentIndex"
-      :isDisabled="isGrading" @jumpToIndex="jumpToIndex" @clickMagicAdd="magicAdd" />
+      :isDisabled="isProcessing" @jumpToIndex="jumpToIndex" @clickMagicAdd="magicAddQuestion" />
   </div>
 </template>
 
@@ -66,8 +67,10 @@ const currentFeedback = computed(() => currentQuestionData.value?.feedback)
 const currentStatus = computed(() => currentQuestionData.value?.status)
 
 const isUnanswered = computed(() => currentStatus.value === "Unanswered")
-const isGrading = computed(() => currentStatus.value === "Grading")
+const isProcessing = computed(() => currentStatus.value === "Processing")
 const isGraded = computed(() => currentStatus.value === "Graded")
+const isMagicAdding = ref(false)
+const isGrading = computed(() => isProcessing && !isMagicAdding)
 
 const isInSession = computed(() => 0 <= currentIndex.value && currentIndex.value < questionsData.value.length)
 const isSubmitButtonDisabled = computed(() => !currentAnswer.value?.trim())
@@ -153,7 +156,7 @@ function goToLastQuestion() {
     const prevIndex = prevShuffleHistory.value.pop()!
     goToIndex(prevIndex)
   } else {
-    goToIndex(props.questions.length - 1)
+    goToIndex(questionsData.value.length - 1)
   }
 }
 
@@ -176,11 +179,23 @@ onBeforeUnmount(() => {
 
 signalRService.on('ReceiveFeedback', response => {
   if (response !== null) {
-    questionsData.value[currentIndex.value].feedback += response
+    if (isMagicAdding.value) {
+      questionsData.value[currentIndex.value].question += response
+    } else {
+      questionsData.value[currentIndex.value].feedback += response
+    }
   }
 })
 
-function sendPrompt(prompt: string) {
+function submitAnswer() {
+  questionsData.value[currentIndex.value].feedback = ""
+  questionsData.value[currentIndex.value].status = "Processing"
+
+  const prompt = `Suppose I'm seeking a junior software developer position. 
+  I'm being asked this question in an interview: ${currentQuestion.value}
+  This is my answer: ${currentAnswer.value}
+  Give me feedback of my answer to that interview question.`
+
   signalRService.invoke('SendPrompt', prompt)
     .then(() => console.log('Prompt sent'))
     .catch(error => {
@@ -190,19 +205,33 @@ function sendPrompt(prompt: string) {
     .finally(() => questionsData.value[currentIndex.value].status = "Graded")
 }
 
-function submitAnswer() {
-  questionsData.value[currentIndex.value].feedback = ""
-  questionsData.value[currentIndex.value].status = "Grading"
+function magicAddQuestion() {
+  isMagicAdding.value = true
 
-  const prompt = `Suppose I'm seeking a junior software developer position. 
-  I'm being asked this question in an interview: ${currentQuestion.value}
-  This is my answer: ${currentAnswer.value}
-  Give me feedback of my answer to that interview question.`
+  const prompt = `Suppose I'm seeking a junior software developer position.
+  Generate a potential question that could be asked in an interview.
+  Make sure the question isn't similiar as the following questions:
+  ${props.questions.join("\n")}`
 
-  sendPrompt(prompt)
-}
+  const nextQuestionData: QuestionData = {
+    number: questionsData.value.length + 1,
+    question: "",
+    answer: "",
+    feedback: "",
+    status: "Processing"
+  }
 
-function magicAdd() {
-  console.log("In magicAdd function")
+  questionsData.value.push(nextQuestionData)
+  jumpToIndex(questionsData.value.length - 1)
+
+  signalRService.invoke('SendPrompt', prompt)
+    .then(() => console.log(prompt))
+    .catch(error => {
+      console.error(error)
+    })
+    .finally(() => {
+      isMagicAdding.value = false
+      questionsData.value[currentIndex.value].status = "Unanswered"
+    })
 }
 </script>
