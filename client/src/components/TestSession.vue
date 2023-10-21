@@ -216,6 +216,7 @@ function magicAddQuestion() {
   ${questions.join("\n")}
   """`
 
+  let lastIndex = questionsData.value.length - 1
   const nextQuestionData: QuestionData = {
     number: questionsData.value.length + 1,
     question: "",
@@ -224,9 +225,13 @@ function magicAddQuestion() {
     status: "Processing"
   }
 
-  questionsData.value.push(nextQuestionData)
+  if (questionsData.value[lastIndex].status === "Error") {
+    questionsData.value[lastIndex] = { ...nextQuestionData, number: questionsData.value[lastIndex].number }
+  } else {
+    questionsData.value.push(nextQuestionData)
+    lastIndex = questionsData.value.length - 1
+  }
 
-  const lastIndex = questionsData.value.length - 1
   jumpToIndex(lastIndex)
 
   signalRService.invoke('SendPrompt', prompt)
