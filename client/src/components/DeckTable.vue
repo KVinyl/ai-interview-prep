@@ -1,8 +1,11 @@
 <template>
   <div class="mt-12 mb-8 drop-shadow-lg">
-    <div v-if="name"
+    <div
       class="flex justify-between bg-slate-300 border border-gray-400 border-b-2 px-4 py-2 text-l font-semibold rounded-t-lg">
       <span class="text-2xl">{{ name }}</span>
+      <div class="flex items-center">
+        <input type="text" class="px-3 py-1 rounded-full" placeholder="Filter questions">
+      </div>
       <MagicAddButton :disabled="isDisabled" @click="emit('clickMagicAdd')" />
     </div>
     <div class="border border-gray-400 divide-y divide-gray-400 overflow-y-auto h-96 rounded-b-lg"

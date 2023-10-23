@@ -5,7 +5,7 @@
         class="flex flex-col items-center space-y-4 px-4 py-4 mt-8 rounded-t-lg bg-gray-200 border border-gray-400 drop-shadow-lg">
         <QuestionSection :question="currentQuestion!" :class="{ 'text-red-800': isError }" />
         <textarea ref="textarea" v-model="questionsData[currentIndex].answer"
-          class="w-5/6 h-24 rounded-lg border border-gray-400 p-4" placeholder="Enter your answer"
+          class="w-5/6 h-24 rounded-lg border border-gray-400 px-4 py-2" placeholder="Enter your answer"
           :disabled="!isUnanswered"></textarea>
         <RectangleButton v-show="isUnanswered" :disabled="isSubmitButtonDisabled" @click="submitAnswer"
           class="bg-green-500 hover:bg-green-600">Submit</RectangleButton>
