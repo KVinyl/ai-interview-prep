@@ -26,8 +26,11 @@
       @restartSession="restartSession" />
     <MessageCard v-else message="This deck currently has zero cards." />
 
+    <AddQuestionModal :show="showAddQuestionModal" @cancel="closeAddQuestionModal" @submit="addQuestion">
+    </AddQuestionModal>
+
     <DeckTable v-if="questionsData.length" :questionsData="questionsData" :name="name" :currentIndex="currentIndex"
-      :isDisabled="isProcessing" @jumpToIndex="jumpToIndex" @clickMagicAdd="magicAddQuestion" />
+      :isDisabled="isProcessing" @jumpToIndex="jumpToIndex" @clickAddQuestion="openAddQuestionModal" />
   </div>
 </template>
 
@@ -35,6 +38,7 @@
 import { ref, computed, onMounted, onBeforeUnmount, watch } from 'vue'
 import type { QuestionData } from '../types/QuestionData'
 import signalRService from '../services/SignalRService'
+import AddQuestionModal from './AddQuestionModal.vue'
 import AIFeedbackCard from './AIFeedbackCard.vue'
 import DeckTable from './DeckTable.vue'
 import EndOfSessionCard from './EndOfSessionCard.vue'
@@ -178,12 +182,8 @@ onBeforeUnmount(() => {
 })
 
 signalRService.on('ReceiveFeedback', response => {
-  if (response !== null) {
-    if (isMagicAdding.value) {
-      questionsData.value[currentIndex.value].question += response
-    } else {
-      questionsData.value[currentIndex.value].feedback += response
-    }
+  if (isProcessing.value && response !== null) {
+    questionsData.value[currentIndex.value].feedback += response
   }
 })
 
@@ -205,44 +205,28 @@ function submitAnswer() {
     .finally(() => questionsData.value[currentIndex.value].status = "Graded")
 }
 
-function magicAddQuestion() {
-  isMagicAdding.value = true
+const showAddQuestionModal = ref(false)
 
-  const questions = questionsData.value.map(data => data.question).reverse()
-  const prompt = `Suppose I'm seeking a junior software developer position.
-  Generate a potential question that could be asked in an interview.
-  Make sure that potential question is different from the following questions: 
-  """
-  ${questions.join("\n")}
-  """`
+function openAddQuestionModal() {
+  showAddQuestionModal.value = true
+}
 
-  let lastIndex = questionsData.value.length - 1
+function closeAddQuestionModal() {
+  showAddQuestionModal.value = false
+}
+
+function addQuestion(newQuestion: string) {
   const nextQuestionData: QuestionData = {
     number: questionsData.value.length + 1,
-    question: "",
+    question: newQuestion,
     answer: "",
     feedback: "",
-    status: "Processing"
+    status: "Unanswered"
   }
 
-  if (questionsData.value[lastIndex].status === "Error") {
-    questionsData.value[lastIndex] = { ...nextQuestionData, number: questionsData.value[lastIndex].number }
-  } else {
-    questionsData.value.push(nextQuestionData)
-    lastIndex = questionsData.value.length - 1
-  }
+  questionsData.value.push(nextQuestionData)
+  jumpToIndex(questionsData.value.length - 1)
 
-  jumpToIndex(lastIndex)
-
-  signalRService.invoke('SendPrompt', prompt)
-    .then(() => questionsData.value[lastIndex].status = "Unanswered")
-    .catch(error => {
-      console.error(error)
-      questionsData.value[lastIndex].question = "Error generating question. Please try again."
-      questionsData.value[lastIndex].status = "Error"
-    })
-    .finally(() => {
-      isMagicAdding.value = false
-    })
+  closeAddQuestionModal()
 }
 </script>

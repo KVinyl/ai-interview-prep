@@ -7,7 +7,9 @@
         <input type="text" v-model="filterString" class="px-3 py-1 rounded-full ring-2 focus:ring-2"
           :class="filterRingColor" placeholder="Filter questions">
       </div>
-      <MagicAddButton :disabled="isDisabled" @click="emit('clickMagicAdd')" />
+      <RectangleButton class="bg-slate-400  hover:bg-green-500 disabled:invisible" :disabled="isDisabled"
+        @click="emit('clickAddQuestion')">Add Question</RectangleButton>
+
     </div>
     <div class="border border-gray-400 divide-y divide-gray-400 overflow-y-auto max-h-96 rounded-b-lg "
       :class="{ 'rounded-t-lg': !name }">
@@ -24,7 +26,8 @@
 import { ref, computed } from 'vue'
 import type { QuestionData } from '../types/QuestionData'
 import DeckTableRow from './DeckTableRow.vue'
-import MagicAddButton from './MagicAddButton.vue'
+import RectangleButton from './RectangleButton.vue'
+
 
 const props = defineProps<{
   questionsData: QuestionData[],
@@ -35,7 +38,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   jumpToIndex: [nextIndex: number],
-  clickMagicAdd: [],
+  clickAddQuestion: [],
 }>()
 
 const filterString = ref("")
