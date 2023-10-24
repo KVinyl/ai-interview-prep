@@ -5,9 +5,7 @@
     <CircleButton :disabled="isPrevButtonDisabled" @click="emit('previousQuestion')"
       class="bg-sky-400 hover:bg-sky-600 text-2xl border-2 border-sky-600">
       🡨</CircleButton>
-    <span class="text-xl">
-      <slot></slot>
-    </span>
+    <slot></slot>
     <CircleButton :disabled="isGrading" @click="emit('nextQuestion')"
       class="bg-sky-400 hover:bg-sky-600 text-2xl border-2 border-sky-600">🡪
     </CircleButton>

@@ -8,9 +8,9 @@
       <!-- Content -->
       <div class="fixed inset-0 flex items-center justify-center">
         <div class="flex flex-col bg-gray-200 rounded-lg w-2/5 p-4 items-center space-y-2">
-          <h2 class="font-semibold">{{ message }}</h2>
+          <div class="text-xl font-semibold">{{ message }}</div>
           <div class="flex items-start w-full space-x-2">
-            <textarea v-model="newQuestion" class="min-h-8 grow" :disabled="isGeneratingQuestion"></textarea>
+            <textarea v-model="newQuestion" class="min-h-8 grow rounded px-2 py-1" :disabled="isGeneratingQuestion"></textarea>
             <button class="bg-yellow-500 rounded p-1 hover:bg-yellow-600 disabled:invisible" @click="generateQuestion"
               :disabled="isGeneratingQuestion">
               <MagicWand class="text-white" />

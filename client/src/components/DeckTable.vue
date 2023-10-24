@@ -1,14 +1,14 @@
 <template>
   <div class="mt-12 mb-8 drop-shadow-lg">
     <div
-      class="flex justify-between bg-slate-300 border border-gray-400 border-b-2 px-4 py-2 text-l font-semibold rounded-t-lg">
-      <span class="text-2xl">{{ name }}</span>
+      class="flex justify-between bg-slate-300 border border-gray-400 border-b-2 px-4 py-2 rounded-t-lg">
+      <div class="text-2xl font-semibold">{{ name }}</div>
       <div class="flex items-center">
         <input type="text" v-model="filterString" class="px-3 py-1 rounded-full ring-2 focus:ring-2"
           :class="filterRingColor, filterBgColor" placeholder="Filter questions">
       </div>
-      <RectangleButton class="bg-slate-400  hover:bg-green-500 disabled:invisible" :disabled="isDisabled"
-        @click="emit('clickAddQuestion')">Add Question</RectangleButton>
+      <button class="bg-slate-400 hover:bg-green-500 rounded px-2 disabled:opacity-20 disabled:cursor-not-allowed" :disabled="isDisabled"
+        @click="emit('clickAddQuestion')"><span class="text-2xl font-semibold leading-4">+</span></button>
 
     </div>
     <div class="border border-gray-400 divide-y divide-gray-400 overflow-y-auto max-h-96 rounded-b-lg "

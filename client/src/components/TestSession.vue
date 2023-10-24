@@ -8,7 +8,7 @@
           class="w-5/6 h-24 rounded-lg border border-gray-400 px-4 py-2" placeholder="Enter your answer"
           :disabled="!isUnanswered"></textarea>
         <RectangleButton v-show="isUnanswered" :disabled="isSubmitButtonDisabled" @click="submitAnswer"
-          class="bg-green-500 hover:bg-green-600">Submit</RectangleButton>
+          class="bg-green-500 hover:bg-green-600 ">Submit</RectangleButton>
         <RectangleButton v-show="isGrading" class="invisible" :disabled="true">Loading</RectangleButton>
         <RectangleButton v-show="isGraded" @click="resetQuestion" class="bg-sky-500 hover:bg-sky-600">Try Again
         </RectangleButton>
@@ -16,8 +16,8 @@
 
       <NavigationBar :class="{ 'rounded-b-lg': !showFeedbackCard }" :index="currentIndex"
         :shuffleStartIndex="shuffleStartIndex" :status="currentStatus!" :isShuffled="isShuffled"
-        @toggleShuffle="toggleShuffle" @previousQuestion="previousQuestion" @nextQuestion="nextQuestion">{{
-          currentQuestionNumber }} / {{ questionsData.length }}</NavigationBar>
+        @toggleShuffle="toggleShuffle" @previousQuestion="previousQuestion" @nextQuestion="nextQuestion"><span class="text-xl font-medium">{{
+          currentQuestionNumber }} / {{ questionsData.length }}</span></NavigationBar>
 
       <AIFeedbackCard v-show="showFeedbackCard" :feedback="currentFeedback!" :isGrading="isGrading" />
     </div>
