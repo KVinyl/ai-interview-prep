@@ -9,7 +9,7 @@
           :disabled="!isUnanswered"></textarea>
         <RectangleButton v-show="isUnanswered" :disabled="isSubmitButtonDisabled" @click="submitAnswer"
           class="bg-green-500 hover:bg-green-600">Submit</RectangleButton>
-        <RectangleButton v-show="isProcessing" class="invisible" :disabled="true">Loading</RectangleButton>
+        <RectangleButton v-show="isGrading" class="invisible" :disabled="true">Loading</RectangleButton>
         <RectangleButton v-show="isGraded" @click="resetQuestion" class="bg-sky-500 hover:bg-sky-600">Try Again
         </RectangleButton>
       </div>
@@ -30,7 +30,7 @@
     </AddQuestionModal>
 
     <DeckTable v-if="questionsData.length" :questionsData="questionsData" :name="name" :currentIndex="currentIndex"
-      :isDisabled="isProcessing" @jumpToIndex="jumpToIndex" @clickAddQuestion="openAddQuestionModal" />
+      :isDisabled="isGrading" @jumpToIndex="jumpToIndex" @clickAddQuestion="openAddQuestionModal" />
   </div>
 </template>
 
@@ -70,11 +70,9 @@ const currentFeedback = computed(() => currentQuestionData.value?.feedback)
 const currentStatus = computed(() => currentQuestionData.value?.status)
 
 const isUnanswered = computed(() => currentStatus.value === "Unanswered")
-const isProcessing = computed(() => currentStatus.value === "Processing")
+const isGrading = computed(() => currentStatus.value === "Grading")
 const isGraded = computed(() => currentStatus.value === "Graded")
 const isError = computed(() => currentStatus.value === "Error")
-const isMagicAdding = ref(false)
-const isGrading = computed(() => isProcessing && !isMagicAdding)
 
 const isInSession = computed(() => 0 <= currentIndex.value && currentIndex.value < questionsData.value.length)
 const isSubmitButtonDisabled = computed(() => !currentAnswer.value?.trim())
@@ -182,14 +180,14 @@ onBeforeUnmount(() => {
 })
 
 signalRService.on('ReceiveFeedback', response => {
-  if (isProcessing.value && response !== null) {
+  if (isGrading.value && response !== null) {
     questionsData.value[currentIndex.value].feedback += response
   }
 })
 
 function submitAnswer() {
   questionsData.value[currentIndex.value].feedback = ""
-  questionsData.value[currentIndex.value].status = "Processing"
+  questionsData.value[currentIndex.value].status = "Grading"
 
   const prompt = `Suppose I'm seeking a junior software developer position. 
   I'm being asked this question in an interview: ${currentQuestion.value}

@@ -1,1 +1,1 @@
-export type QuestionStatus = "Unanswered" | "Processing" | "Graded" | "Error"
+export type QuestionStatus = "Unanswered" | "Grading" | "Graded" | "Error"
