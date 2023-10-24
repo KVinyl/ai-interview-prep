@@ -5,7 +5,7 @@
       <span class="text-2xl">{{ name }}</span>
       <div class="flex items-center">
         <input type="text" v-model="filterString" class="px-3 py-1 rounded-full ring-2 focus:ring-2"
-          :class="filterRingColor" placeholder="Filter questions">
+          :class="filterRingColor, filterBgColor" placeholder="Filter questions">
       </div>
       <RectangleButton class="bg-slate-400  hover:bg-green-500 disabled:invisible" :disabled="isDisabled"
         @click="emit('clickAddQuestion')">Add Question</RectangleButton>
@@ -55,4 +55,6 @@ const filterRingColor = computed(() => {
     return "ring-red-800"
   }
 })
+
+const filterBgColor = computed(() => filteredQuestionsData.value.length > 0 ? "bg-white" : "bg-red-300")
 </script>
