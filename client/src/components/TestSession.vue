@@ -144,6 +144,10 @@ function nextQuestion() {
   }
 }
 
+function setCurrentStatus(newStatus: QuestionStatus) {
+  questionsData.value[currentIndex.value].status = newStatus
+}
+
 function resetFeedback() {
   questionsData.value[currentIndex.value].feedback = ""
 }
@@ -152,7 +156,7 @@ function resetQuestion() {
   if (isError.value) {
     resetFeedback()
   }
-  questionsData.value[currentIndex.value].status = "Unanswered"
+  setCurrentStatus("Unanswered")
 }
 
 function restartSession() {
@@ -199,7 +203,7 @@ signalRService.on('ReceiveFeedback', response => {
 
 function submitAnswer() {
   resetFeedback()
-  questionsData.value[currentIndex.value].status = "Grading"
+  setCurrentStatus("Grading")
 
   const prompt = `Suppose I'm seeking a junior software developer position. 
   I'm being asked this question in an interview: ${currentQuestion.value}
@@ -207,10 +211,10 @@ function submitAnswer() {
   Give me feedback of my answer to that interview question.`
 
   signalRService.invoke('SendPrompt', prompt)
-    .then(() => questionsData.value[currentIndex.value].status = "Graded")
+    .then(() => setCurrentStatus("Graded"))
     .catch(error => {
       console.error(error)
-      questionsData.value[currentIndex.value].status = "Error"
+      setCurrentStatus("Error")
     })
 }
 
