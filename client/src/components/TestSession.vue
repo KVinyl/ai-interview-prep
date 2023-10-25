@@ -5,12 +5,12 @@
         class="flex flex-col items-center space-y-4 px-4 py-4 mt-8 rounded-t-lg bg-gray-200 border border-gray-400 drop-shadow-lg">
         <div class="px-4 py-2"> {{ currentQuestion }}</div>
         <textarea ref="textarea" v-model="questionsData[currentIndex].answer"
-          class="w-5/6 h-24 rounded-lg border border-gray-400 px-4 py-2" placeholder="Enter your answer"
+          class="w-5/6 h-24 rounded-lg border border-gray-400 px-4 py-2 disabled:bg-cobalt-200" placeholder="Enter your answer"
           :disabled="!isUnanswered"></textarea>
         <RectangleButton v-show="isUnanswered" :disabled="isSubmitButtonDisabled" @click="submitAnswer"
           class="bg-green-500 hover:bg-green-600 ">Submit</RectangleButton>
         <RectangleButton v-show="isGrading" class="invisible" :disabled="true">Loading</RectangleButton>
-        <RectangleButton v-show="isGraded || isError" @click="resetQuestion" class="bg-sky-500 hover:bg-sky-600">Try Again
+        <RectangleButton v-show="isGraded || isError" @click="resetQuestion" class="bg-sky-400 hover:bg-sky-600">Try Again
         </RectangleButton>
       </div>
 
