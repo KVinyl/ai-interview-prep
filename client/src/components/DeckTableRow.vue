@@ -7,7 +7,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import type { QuestionData } from '../types/QuestionData'
+import type { QuestionData } from '@/types/QuestionData'
 
 const props = defineProps<{
   questionData: QuestionData,

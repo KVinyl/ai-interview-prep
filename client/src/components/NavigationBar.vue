@@ -18,7 +18,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import type { QuestionStatus } from '../types/QuestionStatus'
+import type { QuestionStatus } from '@/types/QuestionStatus'
 
 import CircleButton from './CircleButton.vue'
 import ShuffleButton from './ShuffleButton.vue'

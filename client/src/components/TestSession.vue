@@ -40,8 +40,9 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, onBeforeUnmount, watch } from 'vue'
-import type { QuestionData } from '../types/QuestionData'
-import signalRService from '../services/SignalRService'
+import type { QuestionData } from '@/types/QuestionData'
+import type { QuestionStatus } from '@/types/QuestionStatus'
+import signalRService from '@/services/SignalRService'
 import AddQuestionModal from './AddQuestionModal.vue'
 import AIFeedbackCard from './AIFeedbackCard.vue'
 import DeckTable from './DeckTable.vue'
@@ -49,6 +50,7 @@ import EndOfSessionCard from './EndOfSessionCard.vue'
 import ErrorMessageCard from './ErrorMessageCard.vue'
 import NavigationBar from './NavigationBar.vue'
 import RectangleButton from './RectangleButton.vue'
+
 
 const props = defineProps<{
   name?: string,
@@ -152,7 +154,6 @@ function resetQuestion() {
   }
   questionsData.value[currentIndex.value].status = "Unanswered"
 }
-
 
 function restartSession() {
   if (isShuffled.value) {

@@ -14,7 +14,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import type { QuestionData } from '../types/QuestionData'
+import type { QuestionData } from '@/types/QuestionData'
 import AnimatedSpinner from './icons/AnimatedSpinner.vue'
 
 const props = defineProps<{

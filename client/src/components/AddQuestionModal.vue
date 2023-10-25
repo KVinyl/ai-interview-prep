@@ -32,7 +32,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import signalRService from '../services/SignalRService'
+import signalRService from '@/services/SignalRService'
 import MagicWand from './icons/MagicWand.vue'
 import RectangleButton from './RectangleButton.vue'
 
