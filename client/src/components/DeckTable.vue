@@ -26,7 +26,6 @@
 import { ref, computed } from 'vue'
 import type { QuestionData } from '../types/QuestionData'
 import DeckTableRow from './DeckTableRow.vue'
-import RectangleButton from './RectangleButton.vue'
 
 
 const props = defineProps<{

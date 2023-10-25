@@ -2,7 +2,7 @@
   <div class="bg-sky-100 overflow-auto min-h-screen">
     <AppHeader />
     <TestSession v-if="questions" :name="deckName" :questions="questions" />
-    <MessageCard v-else :message=message class="w-1/2 mx-auto" />
+    <ErrorMessageCard v-else :message=message class="w-1/2 mx-auto my-4" />
   </div>
 </template>
 
@@ -14,7 +14,7 @@ import type { AxiosError } from 'axios'
 
 import AppHeader from './components/AppHeader.vue'
 import TestSession from './components/TestSession.vue'
-import MessageCard from './components/MessageCard.vue'
+import ErrorMessageCard from './components/ErrorMessageCard.vue'
 
 import deckService from './services/DeckService'
 

@@ -3,28 +3,32 @@
     <div v-if="isInSession">
       <div
         class="flex flex-col items-center space-y-4 px-4 py-4 mt-8 rounded-t-lg bg-gray-200 border border-gray-400 drop-shadow-lg">
-        <QuestionSection :question="currentQuestion!" :class="{ 'text-red-800': isError }" />
+        <div class="px-4 py-2"> {{ currentQuestion }}</div>
         <textarea ref="textarea" v-model="questionsData[currentIndex].answer"
           class="w-5/6 h-24 rounded-lg border border-gray-400 px-4 py-2" placeholder="Enter your answer"
           :disabled="!isUnanswered"></textarea>
         <RectangleButton v-show="isUnanswered" :disabled="isSubmitButtonDisabled" @click="submitAnswer"
           class="bg-green-500 hover:bg-green-600 ">Submit</RectangleButton>
         <RectangleButton v-show="isGrading" class="invisible" :disabled="true">Loading</RectangleButton>
-        <RectangleButton v-show="isGraded" @click="resetQuestion" class="bg-sky-500 hover:bg-sky-600">Try Again
+        <RectangleButton v-show="isGraded || isError" @click="resetQuestion" class="bg-sky-500 hover:bg-sky-600">Try Again
         </RectangleButton>
       </div>
 
-      <NavigationBar :class="{ 'rounded-b-lg': !showFeedbackCard }" :index="currentIndex"
+      <NavigationBar :class="{ 'rounded-b-lg': !showFeedbackCard && !isError }" :index="currentIndex"
         :shuffleStartIndex="shuffleStartIndex" :status="currentStatus!" :isShuffled="isShuffled"
-        @toggleShuffle="toggleShuffle" @previousQuestion="previousQuestion" @nextQuestion="nextQuestion"><span class="text-xl font-medium">{{
-          currentQuestionNumber }} / {{ questionsData.length }}</span></NavigationBar>
+        @toggleShuffle="toggleShuffle" @previousQuestion="previousQuestion" @nextQuestion="nextQuestion"><span
+          class="text-xl font-medium">{{
+            currentQuestionNumber }} / {{ questionsData.length }}</span></NavigationBar>
 
-      <AIFeedbackCard v-show="showFeedbackCard" :feedback="currentFeedback!" :isGrading="isGrading" />
+      <ErrorMessageCard v-show="isError" :class="{ 'rounded-b-lg drop-shadow-lg': !showFeedbackCard }"
+        message="Error grading your answer. Please try again." />
+      <AIFeedbackCard v-show="showFeedbackCard" :questionData="currentQuestionData!" />
+
     </div>
 
     <EndOfSessionCard v-else-if="questions.length" @goToLastQuestion="goToLastQuestion"
       @restartSession="restartSession" />
-    <MessageCard v-else message="This deck currently has zero cards." />
+    <ErrorMessageCard v-else message="This deck currently has zero cards." />
 
     <AddQuestionModal :show="showAddQuestionModal" @cancel="closeAddQuestionModal" @submit="addQuestion">
     </AddQuestionModal>
@@ -42,9 +46,8 @@ import AddQuestionModal from './AddQuestionModal.vue'
 import AIFeedbackCard from './AIFeedbackCard.vue'
 import DeckTable from './DeckTable.vue'
 import EndOfSessionCard from './EndOfSessionCard.vue'
-import MessageCard from './MessageCard.vue'
+import ErrorMessageCard from './ErrorMessageCard.vue'
 import NavigationBar from './NavigationBar.vue'
-import QuestionSection from './QuestionSection.vue'
 import RectangleButton from './RectangleButton.vue'
 
 const props = defineProps<{
@@ -139,9 +142,17 @@ function nextQuestion() {
   }
 }
 
+function resetFeedback() {
+  questionsData.value[currentIndex.value].feedback = ""
+}
+
 function resetQuestion() {
+  if (isError.value) {
+    resetFeedback()
+  }
   questionsData.value[currentIndex.value].status = "Unanswered"
 }
+
 
 function restartSession() {
   if (isShuffled.value) {
@@ -186,7 +197,7 @@ signalRService.on('ReceiveFeedback', response => {
 })
 
 function submitAnswer() {
-  questionsData.value[currentIndex.value].feedback = ""
+  resetFeedback()
   questionsData.value[currentIndex.value].status = "Grading"
 
   const prompt = `Suppose I'm seeking a junior software developer position. 
@@ -195,12 +206,11 @@ function submitAnswer() {
   Give me feedback of my answer to that interview question.`
 
   signalRService.invoke('SendPrompt', prompt)
-    .then(() => console.log('Prompt sent'))
+    .then(() => questionsData.value[currentIndex.value].status = "Graded")
     .catch(error => {
       console.error(error)
-      questionsData.value[currentIndex.value].feedback = error
+      questionsData.value[currentIndex.value].status = "Error"
     })
-    .finally(() => questionsData.value[currentIndex.value].status = "Graded")
 }
 
 const showAddQuestionModal = ref(false)
