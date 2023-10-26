@@ -1,15 +1,14 @@
 <template>
   <div class="mt-12 mb-8 drop-shadow-lg">
     <div
-      class="flex justify-between bg-slate-300 border border-gray-400 border-b-2 px-4 py-2 rounded-t-lg">
+      class="flex flex-col md:flex-row space-y-2 items-center justify-between bg-slate-300 border border-gray-400 border-b-2 px-4 py-2 rounded-t-lg">
       <div class="text-2xl font-semibold">{{ name }}</div>
-      <div class="flex items-center">
+      <div class="flex items-center space-x-2">
         <input type="text" v-model="filterString" class="px-3 py-1 rounded-full ring-2 focus:ring-2"
           :class="filterRingColor, filterBgColor" placeholder="Filter questions">
-      </div>
-      <button class="bg-slate-400 hover:bg-green-500 rounded px-2 disabled:opacity-20 disabled:cursor-not-allowed" :disabled="isDisabled"
+          <button class="bg-slate-400 hover:bg-green-500 rounded px-2 disabled:opacity-20 disabled:cursor-not-allowed" :disabled="isDisabled"
         @click="emit('clickAddQuestion')"><span class="text-2xl font-semibold leading-4">+</span></button>
-
+      </div>
     </div>
     <div class="border border-gray-400 divide-y divide-gray-400 overflow-y-auto max-h-96 rounded-b-lg "
       :class="{ 'rounded-t-lg': !name }">
