@@ -3,7 +3,7 @@
     <div
       class="flex flex-col md:flex-row space-y-2 items-center justify-between bg-slate-300 border border-gray-400 border-b-2 px-4 py-2 rounded-t-lg">
       <div class="text-2xl font-semibold">{{ name }}</div>
-      <div class="flex items-center space-x-2">
+      <div class="flex items-center space-x-4">
         <input type="text" v-model="filterString" class="px-3 py-1 rounded-full ring-2 focus:ring-2"
           :class="filterRingColor, filterBgColor" placeholder="Filter questions">
           <button class="bg-slate-400 hover:bg-green-500 rounded px-2 disabled:opacity-20 disabled:cursor-not-allowed" :disabled="isDisabled"

@@ -1,12 +1,12 @@
 <template>
-  <div class="container sm:w-3/4 lg:w-1/2 mx-auto">
+  <div class="container sm:w-3/5 mx-auto">
     <div v-if="isInSession">
       <div
         class="flex flex-col items-center space-y-4 px-4 py-4 sm:mt-8 rounded-t-lg bg-gray-200 border border-gray-400 drop-shadow-lg">
         <div class="px-4 py-2"> {{ currentQuestion }}</div>
         <textarea ref="textarea" v-model="questionsData[currentIndex].answer"
-          class="w-5/6 h-24 rounded-lg border border-gray-400 px-4 py-2 disabled:bg-cobalt-200" placeholder="Enter your answer"
-          :disabled="!isUnanswered"></textarea>
+          class="w-5/6 h-24 rounded-lg border border-gray-400 px-4 py-2 disabled:bg-cobalt-200"
+          placeholder="Enter your answer" :disabled="!isUnanswered"></textarea>
         <RectangleButton v-show="isUnanswered" :disabled="isSubmitButtonDisabled" @click="submitAnswer"
           class="bg-green-500 hover:bg-green-600 ">Submit</RectangleButton>
         <RectangleButton v-show="isGrading" class="invisible" :disabled="true">Loading</RectangleButton>
