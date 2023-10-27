@@ -7,7 +7,7 @@
 
       <!-- Content -->
       <div class="fixed inset-0 flex items-center justify-center">
-        <div class="flex flex-col bg-gray-200 rounded-lg w-3/5 md:w-2/5 p-4 items-center space-y-2">
+        <div class="flex flex-col bg-gray-200 rounded-lg min-w-fit max-w-2xl w-3/5  p-4 items-center space-y-2">
           <div class="text-xl font-semibold">{{ message }}</div>
           <div class="flex items-start w-full space-x-2">
             <textarea v-model="newQuestion" class="min-h-8 grow rounded px-2 py-1" :disabled="isGeneratingQuestion"></textarea>
