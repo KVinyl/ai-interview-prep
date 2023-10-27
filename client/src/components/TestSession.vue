@@ -1,5 +1,5 @@
 <template>
-  <div class="container sm:w-3/5 mx-auto">
+  <div class="container sm:w-3/5 max-w-4xl mx-auto">
     <div v-if="isInSession">
       <div
         class="flex flex-col items-center space-y-4 px-4 py-4 sm:mt-8 rounded-t-lg bg-gray-200 border border-gray-400 drop-shadow-lg">
