@@ -40,7 +40,7 @@ const emit = defineEmits<{
 }>()
 
 const filterString = ref("")
-const filteredQuestionsData = computed(() => props.questionsData.filter(data => data.question.toLowerCase().includes(filterString.value.trim().toLowerCase())))
+const filteredQuestionsData = computed(() => props.questionsData.filter(data => data.question.toLowerCase().includes(filterString.value.toLowerCase())))
 
 const filterRingColor = computed(() => {
   if (filterString.value.trim().length === 0) {
