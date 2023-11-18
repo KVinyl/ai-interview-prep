@@ -4,14 +4,9 @@ using System.Data.SqlClient;
 
 namespace AIInterviewPrep.DAOs
 {
-    public class DeckSqlDao : IDeckDao
+    public class DeckSqlDao(string connectionString) : IDeckDao
     {
-        private readonly string connectionString = "";
-
-        public DeckSqlDao(string connectionString)
-        {
-            this.connectionString = connectionString;
-        }
+        private readonly string connectionString = connectionString;
 
         public Deck? GetDeck(int deckId)
         {
@@ -47,7 +42,7 @@ namespace AIInterviewPrep.DAOs
         private List<string> GetQuestionsByDeckId(int deckId)
         {
             string sqlGetQuestionsByDeckId = "SELECT question_text FROM question WHERE deck_id = @deck_id;";
-            List<string> questions = new();
+            List<string> questions = [];
 
             try
             {
@@ -70,7 +65,7 @@ namespace AIInterviewPrep.DAOs
             }
             catch (Exception)
             {
-                return new();
+                return [];
             }
 
             return questions;

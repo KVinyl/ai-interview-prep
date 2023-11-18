@@ -4,14 +4,9 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace AIInterviewPrep.Hubs
 {
-    public class OpenAIHub : Hub
+    public class OpenAIHub(IConfiguration configuration) : Hub
     {
-        private IConfiguration Configuration;
-
-        public OpenAIHub(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
+        private readonly IConfiguration Configuration = configuration;
 
         public async Task SendPrompt(string prompt)
         {

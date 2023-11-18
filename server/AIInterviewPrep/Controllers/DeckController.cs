@@ -1,21 +1,14 @@
-﻿using AIInterviewPrep.DAOs;
-using AIInterviewPrep.DAOs.Interfaces;
+﻿using AIInterviewPrep.DAOs.Interfaces;
 using AIInterviewPrep.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AIInterviewPrep.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    public class DeckController : ControllerBase
+    public class DeckController(IDeckDao deckDao) : ControllerBase
     {
-        public IDeckDao deckDao;
-
-        public DeckController(IDeckDao deckDao)
-        {
-            this.deckDao = deckDao;
-        }
+        public IDeckDao deckDao = deckDao;
 
         [HttpGet("{deckId}")]
         public ActionResult<Deck> GetDeck(int deckId)

@@ -1,7 +1,6 @@
 using AIInterviewPrep.DAOs;
 using AIInterviewPrep.DAOs.Interfaces;
 using AIInterviewPrep.Hubs;
-using Microsoft.Extensions.Configuration;
 
 internal class Program
 {
