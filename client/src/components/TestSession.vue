@@ -26,7 +26,7 @@
 
     </div>
 
-    <EndOfSessionCard v-else-if="questions.length" @goToLastQuestion="goToLastQuestion"
+    <EndOfSessionCard v-else-if="questionsData.length" @goToLastQuestion="goToLastQuestion"
       @restartSession="restartSession" />
     <ErrorMessageCard v-else message="This deck currently has zero cards." />
 
@@ -54,17 +54,11 @@ import RectangleButton from './RectangleButton.vue'
 
 const props = defineProps<{
   name?: string,
-  questions: string[]
+  questionsData: QuestionData[]
 }>()
 
 const currentIndex = ref(0)
-const questionsData = ref<QuestionData[]>(props.questions.map((question, index) => ({
-  number: index + 1,
-  question,
-  answer: "",
-  feedback: "",
-  status: "Unanswered"
-})))
+const questionsData = ref(props.questionsData)
 
 const currentQuestionData = computed<QuestionData | undefined>(() => questionsData.value[currentIndex.value])
 
@@ -144,8 +138,13 @@ function nextQuestion() {
   }
 }
 
+function saveQuestionsDataToLocalStorage() {
+  localStorage.setItem("questionsData", JSON.stringify(questionsData.value))
+}
+
 function setCurrentStatus(newStatus: QuestionStatus) {
   questionsData.value[currentIndex.value].status = newStatus
+  saveQuestionsDataToLocalStorage()
 }
 
 function resetFeedback() {
@@ -216,6 +215,7 @@ function submitAnswer() {
       console.error(error)
       setCurrentStatus("Error")
     })
+    .finally(() => saveQuestionsDataToLocalStorage())
 }
 
 const showAddQuestionModal = ref(false)
@@ -240,6 +240,7 @@ function addQuestion(newQuestion: string) {
   questionsData.value.push(nextQuestionData)
   jumpToIndex(questionsData.value.length - 1)
 
+  saveQuestionsDataToLocalStorage()
   closeAddQuestionModal()
 }
 </script>
